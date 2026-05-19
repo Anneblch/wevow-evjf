@@ -1,916 +1,898 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+
+
+<!DOCTYPE html>
+<html lang="fr">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2299.4">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 20.0px 'Helvetica Neue'; min-height: 25.0px}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px 'Helvetica Neue'}
-    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px 'Helvetica Neue'; min-height: 15.0px}
-    span.s1 {font: 13.0px 'Zapf Dingbats'}
-    span.s2 {font: 13.0px 'STIX Two Math'}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>WEVOW — Il a dit quoi ? 💍</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --cream:#F8F3EE; --forest:#1E3A35; --rose:#C9956A;
+  --rose-light:#D4A98A; --rose-pale:#E8C9B4; --text-dark:#1A2E2B;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Jost',sans-serif;background:var(--cream);min-height:100vh;color:var(--text-dark);}
+.screen{display:none;min-height:100vh;flex-direction:column;}
+.screen.active{display:flex;}
+
+/* ── LANDING ── */
+#screen-landing{background:var(--forest);align-items:center;justify-content:center;text-align:center;padding:48px 24px;position:relative;overflow:hidden;}
+#screen-landing::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 25% 15%,rgba(201,149,106,.2) 0%,transparent 55%),radial-gradient(ellipse at 75% 85%,rgba(201,149,106,.13) 0%,transparent 50%);}
+.land-logo-txt{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:7px;color:var(--rose-light);text-transform:uppercase;margin-bottom:36px;position:relative;}
+.land-w{width:72px;height:72px;background:linear-gradient(135deg,var(--rose-light),var(--rose));border-radius:18px;margin:0 auto 26px;display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 14px 36px rgba(201,149,106,.38);}
+.land-w svg{width:42px;height:42px;fill:white;}
+.land-title{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,10vw,54px);font-weight:400;color:white;line-height:1.1;margin-bottom:12px;position:relative;}
+.land-title em{color:var(--rose-light);font-style:italic;}
+.land-sub{font-size:13px;color:#7EA09A;font-weight:300;line-height:1.65;margin-bottom:44px;max-width:300px;position:relative;}
+.land-btns{display:flex;flex-direction:column;gap:10px;width:100%;max-width:340px;position:relative;}
+.lbtn{padding:15px 18px;border-radius:13px;border:none;cursor:pointer;font-family:'Jost',sans-serif;font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;display:flex;align-items:center;gap:13px;text-align:left;transition:all .25s;}
+.lbtn-p{background:linear-gradient(135deg,var(--rose-light),var(--rose));color:white;}
+.lbtn-p:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(201,149,106,.4);}
+.lbtn-s{background:rgba(255,255,255,.07);color:var(--cream);border:1px solid rgba(255,255,255,.13);}
+.lbtn-s:hover{background:rgba(255,255,255,.14);}
+.lbtn-icon{width:36px;height:36px;min-width:36px;border-radius:8px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:16px;}
+.lbtn-p .lbtn-icon{background:rgba(255,255,255,.22);}
+.lbtn-label{font-size:10px;letter-spacing:2px;}
+.lbtn-desc{font-size:10px;font-weight:300;opacity:.65;margin-top:2px;letter-spacing:.5px;}
+
+/* ── SHARED HEADER ── */
+.app-header{background:var(--forest);padding:13px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.ah-logo{display:flex;align-items:center;gap:9px;}
+.ah-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--rose-light),var(--rose));border-radius:8px;display:flex;align-items:center;justify-content:center;}
+.ah-icon svg{width:18px;height:18px;fill:white;}
+.ah-name{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;letter-spacing:4px;color:var(--cream);}
+.back-btn{background:rgba(255,255,255,.1);border:none;color:var(--cream);padding:7px 12px;border-radius:8px;cursor:pointer;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:1px;transition:background .2s;}
+.back-btn:hover{background:rgba(255,255,255,.18);}
+.screen-body{flex:1;overflow-y:auto;padding:20px 16px 80px;}
+
+/* ── CARDS ── */
+.card{background:white;border-radius:17px;padding:20px;margin-bottom:13px;box-shadow:0 2px 16px rgba(30,58,53,.06);}
+.card h3{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--forest);margin-bottom:4px;}
+.card p{font-size:12px;color:#8A9E9B;font-weight:300;margin-bottom:14px;}
+label{display:block;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--forest);font-weight:600;margin-bottom:6px;}
+input[type=text],textarea{width:100%;padding:11px 13px;border:1.5px solid #E8DDD6;border-radius:9px;font-family:'Jost',sans-serif;font-size:13px;color:var(--text-dark);background:var(--cream);transition:border .2s;resize:none;}
+input[type=text]:focus,textarea:focus{outline:none;border-color:var(--rose);}
+.field{margin-bottom:13px;}
+.btn{width:100%;padding:13px;border:none;border-radius:10px;font-family:'Jost',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:7px;}
+.btn-p{background:linear-gradient(135deg,var(--rose-light),var(--rose));color:white;}
+.btn-p:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(201,149,106,.35);}
+.btn-f{background:var(--forest);color:white;}
+.btn-g{background:transparent;color:var(--rose);border:1.5px solid var(--rose-pale);}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important;}
+
+/* ── SETUP TABS ── */
+.stabs{display:flex;background:var(--forest);border-radius:10px;padding:4px;margin-bottom:16px;}
+.stab{flex:1;padding:8px 4px;border:none;border-radius:7px;font-family:'Jost',sans-serif;font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;background:transparent;color:#7EA09A;transition:all .2s;}
+.stab.active{background:linear-gradient(135deg,var(--rose-light),var(--rose));color:white;}
+.sp{display:none;}.sp.active{display:block;}
+
+/* ── Q LIST ── */
+.ql{display:flex;flex-direction:column;gap:8px;}
+.qi{background:var(--cream);border-radius:12px;padding:12px 13px;display:flex;align-items:flex-start;gap:10px;border:1.5px solid #EDE4DA;animation:sli .3s ease;}
+.qi.hv{border-color:var(--rose-pale);}
+@keyframes sli{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.qnum{width:22px;height:22px;min-width:22px;border-radius:50%;background:linear-gradient(135deg,var(--rose-light),var(--rose));display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;}
+.qbody{flex:1;min-width:0;}
+.qtxt{font-size:12px;line-height:1.4;color:var(--text-dark);margin-bottom:4px;}
+.qmeta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.q-ans-b{font-size:10px;color:var(--rose);background:rgba(201,149,106,.1);border-radius:4px;padding:2px 6px;}
+.q-vid-b{font-size:10px;color:#2A7A5E;background:rgba(42,122,94,.1);border-radius:4px;padding:2px 6px;}
+.q-del{background:none;border:none;color:#C5B8B2;font-size:18px;cursor:pointer;padding:0;line-height:1;transition:color .2s;}
+.q-del:hover{color:#E07070;}
+.empty{text-align:center;padding:28px 14px;color:#B8C9C7;}
+.empty .ei{font-size:32px;margin-bottom:7px;}
+.empty p{font-size:12px;font-weight:300;}
+
+/* ── SESSION CODE BOX ── */
+.code-box{background:var(--forest);border-radius:14px;padding:20px;text-align:center;margin-bottom:13px;}
+.code-box p{color:#7EA09A;font-size:11px;font-weight:300;margin-bottom:10px;}
+.code-val{font-family:'Cormorant Garamond',serif;font-size:40px;letter-spacing:10px;color:white;margin-bottom:12px;}
+.code-hint{font-size:10px;color:#5E8580;letter-spacing:1.5px;}
+
+/* ── JOIN BOX ── */
+.join-box{background:white;border-radius:17px;padding:20px;margin-bottom:13px;box-shadow:0 2px 16px rgba(30,58,53,.06);}
+.join-box h3{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--forest);margin-bottom:4px;}
+.join-box p{font-size:12px;color:#8A9E9B;font-weight:300;margin-bottom:14px;}
+.code-input{text-align:center;font-family:'Cormorant Garamond',serif;font-size:32px;letter-spacing:8px;text-transform:uppercase;}
+
+/* ── GROOM CARD ── */
+.gcard{background:linear-gradient(135deg,var(--forest),#2A4E47);border-radius:17px;padding:20px;text-align:center;margin-bottom:13px;}
+.gcard h3{font-family:'Cormorant Garamond',serif;color:white;font-size:20px;margin-bottom:5px;}
+.gcard p{color:#7EA09A;font-size:11px;font-weight:300;margin-bottom:14px;}
+.ring-wrap{position:relative;width:72px;height:72px;margin:0 auto 10px;}
+.ring-svg{transform:rotate(-90deg);}
+.ring-bg{fill:none;stroke:rgba(255,255,255,.1);stroke-width:6;}
+.ring-fill{fill:none;stroke:url(#rg);stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset .5s;}
+.ring-count{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:19px;color:white;}
+
+/* ── Q NAV ── */
+.qnav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.qnav-btn{background:var(--forest);color:white;border:none;width:36px;height:36px;border-radius:8px;font-size:18px;cursor:pointer;transition:opacity .2s;display:flex;align-items:center;justify-content:center;}
+.qnav-btn:disabled{opacity:.28;cursor:default;}
+.qnav-info{text-align:center;}
+.qnav-count{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--forest);}
+.qnav-lbl{font-size:9px;letter-spacing:2px;color:var(--rose);text-transform:uppercase;}
+.pdots{display:flex;gap:5px;justify-content:center;margin-bottom:18px;flex-wrap:wrap;}
+.pdot{width:6px;height:6px;border-radius:50%;background:#EDE4DA;transition:all .3s;}
+.pdot.done{background:var(--rose);}
+.pdot.cur{background:var(--forest);transform:scale(1.3);}
+
+/* ── RECORDER ── */
+.rec-qcard{background:var(--forest);border-radius:17px;padding:24px 18px;text-align:center;margin-bottom:14px;position:relative;overflow:hidden;}
+.rec-qcard::before{content:'';position:absolute;top:-38px;right:-38px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(201,149,106,.16) 0%,transparent 70%);}
+.rec-qlbl{font-size:9px;letter-spacing:3px;color:var(--rose-light);margin-bottom:10px;text-transform:uppercase;}
+.rec-qtxt{font-family:'Cormorant Garamond',serif;font-size:clamp(16px,5vw,22px);color:white;font-weight:400;line-height:1.4;}
+.vid-wrap{position:relative;background:#0A1A17;border-radius:14px;overflow:hidden;aspect-ratio:9/16;max-height:280px;margin-bottom:13px;}
+.vid-wrap video{width:100%;height:100%;object-fit:cover;display:block;}
+.rec-ind{position:absolute;top:9px;right:9px;background:rgba(220,60,60,.88);color:white;font-size:9px;font-weight:700;letter-spacing:2px;padding:4px 8px;border-radius:18px;display:none;align-items:center;gap:5px;}
+.rec-ind.show{display:flex;animation:pulse 1.2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.42}}
+.rec-dot{width:6px;height:6px;border-radius:50%;background:white;}
+.rec-timer{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.5);color:white;font-size:12px;font-weight:500;padding:3px 11px;border-radius:18px;display:none;}
+.rec-timer.show{display:block;}
+.play-wrap{background:#0A1A17;border-radius:14px;overflow:hidden;aspect-ratio:9/16;max-height:280px;margin-bottom:13px;display:none;}
+.play-wrap.show{display:block;}
+.play-wrap video{width:100%;height:100%;object-fit:cover;}
+.rec-ctrls{display:flex;flex-direction:column;gap:8px;}
+.rec-row{display:flex;gap:8px;}
+.btn-rec{background:#D94040;color:white;flex:1;border:none;padding:13px;border-radius:10px;font-family:'Jost',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .25s;}
+.btn-rec:hover{box-shadow:0 8px 20px rgba(217,64,64,.35);}
+.btn-stop{background:#333;color:white;flex:1;border:none;padding:13px;border-radius:10px;font-family:'Jost',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;}
+.cam-status{text-align:center;font-size:11px;color:#8A9E9B;padding:5px 0;}
+
+/* ── UPLOAD PROGRESS ── */
+.upload-bar-wrap{background:#EDE4DA;border-radius:10px;height:6px;margin:8px 0;display:none;}
+.upload-bar-wrap.show{display:block;}
+.upload-bar{height:6px;background:linear-gradient(90deg,var(--rose-light),var(--rose));border-radius:10px;width:0%;transition:width .3s;}
+.upload-status{text-align:center;font-size:11px;color:var(--rose);padding:4px 0;display:none;}
+.upload-status.show{display:block;}
+
+/* ── GAME ── */
+.gscore{display:flex;justify-content:space-around;background:var(--forest);border-radius:13px;padding:12px;margin-bottom:16px;}
+.gsitem{text-align:center;}
+.gsval{font-family:'Cormorant Garamond',serif;font-size:24px;color:white;}
+.gsval.g{color:#7ED4B4;}.gsval.b{color:#E9957A;}.gsval.r{color:var(--rose-light);}
+.gslbl{font-size:9px;letter-spacing:2px;color:#5E8580;text-transform:uppercase;}
+.prog-wrap{height:3px;background:#EDE4DA;border-radius:3px;margin-bottom:20px;}
+.prog-bar{height:3px;background:linear-gradient(90deg,var(--rose-light),var(--rose));border-radius:3px;transition:width .5s;}
+.qcard{background:var(--forest);border-radius:19px;padding:26px 20px;text-align:center;margin-bottom:16px;position:relative;overflow:hidden;}
+.qcard::before{content:'';position:absolute;top:-42px;right:-42px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(201,149,106,.16) 0%,transparent 70%);}
+.qcard-lbl{font-size:9px;letter-spacing:3px;color:var(--rose-light);margin-bottom:11px;text-transform:uppercase;}
+.qcard-txt{font-family:'Cormorant Garamond',serif;font-size:clamp(17px,5vw,24px);color:white;font-weight:400;line-height:1.4;}
+.gvid-wrap{background:#0A1A17;border-radius:15px;overflow:hidden;aspect-ratio:9/16;max-height:300px;margin-bottom:13px;display:none;position:relative;}
+.gvid-wrap.show{display:block;}
+.gvid-wrap video{width:100%;height:100%;object-fit:cover;}
+.play-ov{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.28);cursor:pointer;}
+.play-circle{width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;font-size:21px;padding-left:4px;}
+.ans-reveal{background:white;border-radius:15px;padding:18px 16px;margin-bottom:13px;display:none;}
+.ans-reveal.show{display:block;animation:fuup .4s ease;}
+@keyframes fuup{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.ar-lbl{font-size:9px;letter-spacing:2.5px;color:var(--rose);text-transform:uppercase;margin-bottom:5px;}
+.ar-txt{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--forest);font-style:italic;}
+.novid{background:rgba(201,149,106,.1);border:1px solid var(--rose-pale);border-radius:10px;padding:11px 13px;margin-bottom:13px;font-size:11px;color:#96714F;display:none;}
+.novid.show{display:block;}
+.gactions{display:flex;flex-direction:column;gap:8px;}
+.rbts{display:flex;gap:8px;}
+.btn-ok{background:#E8F5F0;color:#2A7A5E;border:1.5px solid #B8E0D2;flex:1;border-radius:10px;padding:12px;font-family:'Jost',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;}
+.btn-ko{background:#FBF0EC;color:#C05C3C;border:1.5px solid #F0C4B4;flex:1;border-radius:10px;padding:12px;font-family:'Jost',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;}
+
+/* ── END ── */
+.endwrap{text-align:center;padding:32px 14px;}
+.end-t{font-size:60px;margin-bottom:16px;}
+.end-h{font-family:'Cormorant Garamond',serif;font-size:34px;color:var(--forest);margin-bottom:6px;}
+.end-s{font-size:12px;color:#8A9E9B;font-weight:300;margin-bottom:24px;}
+.end-sc{display:inline-flex;gap:22px;background:var(--forest);border-radius:16px;padding:18px 26px;margin-bottom:22px;}
+.esi{text-align:center;}
+.esv{font-family:'Cormorant Garamond',serif;font-size:40px;color:white;}
+.esv.g{color:#7ED4B4;}.esv.b{color:#E9957A;}
+.esl{font-size:9px;letter-spacing:2px;color:#5E8580;text-transform:uppercase;}
+
+/* ── LOADING ── */
+.loader{display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;gap:14px;}
+.loader.show{display:flex;}
+.spinner{width:36px;height:36px;border:3px solid var(--rose-pale);border-top-color:var(--rose);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader p{font-size:12px;color:#8A9E9B;font-weight:300;}
+
+/* ── OVERLAY ── */
+.ov{display:none;position:fixed;inset:0;background:rgba(12,28,24,.88);backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center;}
+.ov.show{display:flex;animation:fin .3s;}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+.modal{background:var(--cream);border-radius:24px;padding:38px 26px;text-align:center;max-width:300px;width:90%;animation:pin .4s cubic-bezier(.34,1.56,.64,1);}
+@keyframes pin{from{transform:scale(.72)}to{transform:scale(1)}}
+.modal-ic{font-size:52px;margin-bottom:11px;}
+.modal-h{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--forest);margin-bottom:5px;}
+.modal-s{font-size:12px;color:#8A9E9B;font-weight:300;margin-bottom:20px;}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--forest);color:white;padding:9px 18px;border-radius:26px;font-size:12px;opacity:0;transition:opacity .3s;z-index:300;white-space:nowrap;pointer-events:none;}
+.toast.show{opacity:1;}
+</style>
 </head>
 <body>
-<p class="p1"><b></b><br></p>
-<p class="p2">&lt;!DOCTYPE html&gt;</p>
-<p class="p2">&lt;html lang="fr"&gt;</p>
-<p class="p2">&lt;head&gt;</p>
-<p class="p2">&lt;meta charset="UTF-8"&gt;</p>
-<p class="p2">&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"&gt;</p>
-<p class="p2">&lt;title&gt;WEVOW — Il a dit quoi ? 💍&lt;/title&gt;</p>
-<p class="p2">&lt;link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&amp;family=Jost:wght@300;400;500;600&amp;display=swap" rel="stylesheet"&gt;</p>
-<p class="p2">&lt;script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"&gt;&lt;/script&gt;</p>
-<p class="p2">&lt;style&gt;</p>
-<p class="p2">:root {</p>
-<p class="p2"><span class="Apple-converted-space">  </span>--cream:#F8F3EE; --forest:#1E3A35; --rose:#C9956A;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>--rose-light:#D4A98A; --rose-pale:#E8C9B4; --text-dark:#1A2E2B;</p>
-<p class="p2">}</p>
-<p class="p2">*{margin:0;padding:0;box-sizing:border-box;}</p>
-<p class="p2">body{font-family:'Jost',sans-serif;background:var(--cream);min-height:100vh;color:var(--text-dark);}</p>
-<p class="p2">.screen{display:none;min-height:100vh;flex-direction:column;}</p>
-<p class="p2">.screen.active{display:flex;}</p>
-<p class="p3"><br></p>
-<p class="p2">/* ── LANDING ── */</p>
-<p class="p2">#screen-landing{background:var(--forest);align-items:center;justify-content:center;text-align:center;padding:48px 24px;position:relative;overflow:hidden;}</p>
-<p class="p2">#screen-landing::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 25% 15%,rgba(201,149,106,.2) 0%,transparent 55%),radial-gradient(ellipse at 75% 85%,rgba(201,149,106,.13) 0%,transparent 50%);}</p>
-<p class="p2">.land-logo-txt{font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:7px;color:var(--rose-light);text-transform:uppercase;margin-bottom:36px;position:relative;}</p>
-<p class="p2">.land-w{width:72px;height:72px;background:linear-gradient(135deg,var(--rose-light),var(--rose));border-radius:18px;margin:0 auto 26px;display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 14px 36px rgba(201,149,106,.38);}</p>
-<p class="p2">.land-w svg{width:42px;height:42px;fill:white;}</p>
-<p class="p2">.land-title{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,10vw,54px);font-weight:400;color:white;line-height:1.1;margin-bottom:12px;position:relative;}</p>
-<p class="p2">.land-title em{color:var(--rose-light);font-style:italic;}</p>
-<p class="p2">.land-sub{font-size:13px;color:#7EA09A;font-weight:300;line-height:1.65;margin-bottom:44px;max-width:300px;position:relative;}</p>
-<p class="p2">.land-btns{display:flex;flex-direction:column;gap:10px;width:100%;max-width:340px;position:relative;}</p>
-<p class="p2">.lbtn{padding:15px 18px;border-radius:13px;border:none;cursor:pointer;font-family:'Jost',sans-serif;font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;display:flex;align-items:center;gap:13px;text-align:left;transition:all .25s;}</p>
-<p class="p2">.lbtn-p{background:linear-gradient(135deg,var(--rose-light),var(--rose));color:white;}</p>
-<p class="p2">.lbtn-p:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(201,149,106,.4);}</p>
-<p class="p2">.lbtn-s{background:rgba(255,255,255,.07);color:var(--cream);border:1px solid rgba(255,255,255,.13);}</p>
-<p class="p2">.lbtn-s:hover{background:rgba(255,255,255,.14);}</p>
-<p class="p2">.lbtn-icon{width:36px;height:36px;min-width:36px;border-radius:8px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:16px;}</p>
-<p class="p2">.lbtn-p .lbtn-icon{background:rgba(255,255,255,.22);}</p>
-<p class="p2">.lbtn-label{font-size:10px;letter-spacing:2px;}</p>
-<p class="p2">.lbtn-desc{font-size:10px;font-weight:300;opacity:.65;margin-top:2px;letter-spacing:.5px;}</p>
-<p class="p3"><br></p>
-<p class="p2">/* ── SHARED HEADER ── */</p>
-<p class="p2">.app-header{background:var(--forest);padding:13px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}</p>
-<p class="p2">.ah-logo{display:flex;align-items:center;gap:9px;}</p>
-<p class="p2">.ah-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--rose-light),var(--rose));border-radius:8px;display:flex;align-items:center;justify-content:center;}</p>
-<p class="p2">.ah-icon svg{width:18px;height:18px;fill:white;}</p>
-<p class="p2">.ah-name{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;letter-spacing:4px;color:var(--cream);}</p>
-<p class="p2">.back-btn{background:rgba(255,255,255,.1);border:none;color:var(--cream);padding:7px 12px;border-radius:8px;cursor:pointer;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:1px;transition:background .2s;}</p>
-<p class="p2">.back-btn:hover{background:rgba(255,255,255,.18);}</p>
-<p class="p2">.screen-body{flex:1;overflow-y:auto;padding:20px 16px 80px;}</p>
-<p class="p3"><br></p>
-<p class="p2">/* ── CARDS ── */</p>
-<p class="p2">.card{background:white;border-radius:17px;padding:20px;margin-bottom:13px;box-shadow:0 2px 16px rgba(30,58,53,.06);}</p>
-<p class="p2">.card h3{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--forest);margin-bottom:4px;}</p>
-<p class="p2">.card p{font-size:12px;color:#8A9E9B;font-weight:300;margin-bottom:14px;}</p>
-<p class="p2">label{display:block;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--forest);font-weight:600;margin-bottom:6px;}</p>
-<p class="p2">input[type=text],textarea{width:100%;padding:11px 13px;border:1.5px solid #E8DDD6;border-radius:9px;font-family:'Jost',sans-serif;font-size:13px;color:var(--text-dark);background:var(--cream);transition:border .2s;resize:none;}</p>
-<p class="p2">input[type=text]:focus,textarea:focus{outline:none;border-color:var(--rose);}</p>
-<p class="p2">.field{margin-bottom:13px;}</p>
-<p class="p2">.btn{width:100%;padding:13px;border:none;border-radius:10px;font-family:'Jost',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:7px;}</p>
-<p class="p2">.btn-p{background:linear-gradient(135deg,var(--rose-light),var(--rose));color:white;}</p>
-<p class="p2">.btn-p:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(201,149,106,.35);}</p>
-<p class="p2">.btn-f{background:var(--forest);color:white;}</p>
-<p class="p2">.btn-g{background:transparent;color:var(--rose);border:1.5px solid var(--rose-pale);}</p>
-<p class="p2">.btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important;}</p>
-<p class="p3"><br></p>
-<p class="p2">/* ── SETUP TABS ── */</p>
-<p class="p2">.stabs{display:flex;background:var(--forest);border-radius:10px;padding:4px;margin-bottom:16px;}</p>
-<p class="p2">.stab{flex:1;padding:8px 4px;border:none;border-radius:7px;font-family:'Jost',sans-serif;font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;background:transparent;color:#7EA09A;transition:all .2s;}</p>
-<p class="p2">.stab.active{background:linear-gradient(135deg,var(--rose-light),var(--rose));color:white;}</p>
-<p class="p2">.sp{display:none;}.sp.active{display:block;}</p>
-<p class="p3"><br></p>
-<p class="p2">/* ── Q LIST ── */</p>
-<p class="p2">.ql{display:flex;flex-direction:column;gap:8px;}</p>
-<p class="p2">.qi{background:var(--cream);border-radius:12px;padding:12px 13px;display:flex;align-items:flex-start;gap:10px;border:1.5px solid #EDE4DA;animation:sli .3s ease;}</p>
-<p class="p2">.qi.hv{border-color:var(--rose-pale);}</p>
-<p class="p2">@keyframes sli{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}</p>
-<p class="p2">.qnum{width:22px;height:22px;min-width:22px;border-radius:50%;background:linear-gradient(135deg,var(--rose-light),var(--rose));display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;}</p>
-<p class="p2">.qbody{flex:1;min-width:0;}</p>
-<p class="p2">.qtxt{font-size:12px;line-height:1.4;color:var(--text-dark);margin-bottom:4px;}</p>
-<p class="p2">.qmeta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}</p>
-<p class="p2">.q-ans-b{font-size:10px;color:var(--rose);background:rgba(201,149,106,.1);border-radius:4px;padding:2px 6px;}</p>
-<p class="p2">.q-vid-b{font-size:10px;color:#2A7A5E;background:rgba(42,122,94,.1);border-radius:4px;padding:2px 6px;}</p>
-<p class="p2">.q-del{background:none;border:none;color:#C5B8B2;font-size:18px;cursor:pointer;padding:0;line-height:1;transition:color .2s;}</p>
-<p class="p2">.q-del:hover{color:#E07070;}</p>
-<p class="p2">.empty{text-align:center;padding:28px 14px;color:#B8C9C7;}</p>
-<p class="p2">.empty .ei{font-size:32px;margin-bottom:7px;}</p>
-<p class="p2">.empty p{font-size:12px;font-weight:300;}</p>
-<p class="p3"><br></p>
-<p class="p2">/* ── SESSION CODE BOX ── */</p>
-<p class="p2">.code-box{background:var(--forest);border-radius:14px;padding:20px;text-align:center;margin-bottom:13px;}</p>
-<p class="p2">.code-box p{color:#7EA09A;font-size:11px;font-weight:300;margin-bottom:10px;}</p>
-<p class="p2">.code-val{font-family:'Cormorant Garamond',serif;font-size:40px;letter-spacing:10px;color:white;margin-bottom:12px;}</p>
-<p class="p2">.code-hint{font-size:10px;color:#5E8580;letter-spacing:1.5px;}</p>
-<p class="p3"><br></p>
-<p class="p2">/* ── JOIN BOX ── */</p>
-<p class="p2">.join-box{background:white;border-radius:17px;padding:20px;margin-bottom:13px;box-shadow:0 2px 16px rgba(30,58,53,.06);}</p>
-<p class="p2">.join-box h3{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--forest);margin-bottom:4px;}</p>
-<p class="p2">.join-box p{font-size:12px;color:#8A9E9B;font-weight:300;margin-bottom:14px;}</p>
-<p class="p2">.code-input{text-align:center;font-family:'Cormorant Garamond',serif;font-size:32px;letter-spacing:8px;text-transform:uppercase;}</p>
-<p class="p3"><br></p>
-<p class="p2">/* ── GROOM CARD ── */</p>
-<p class="p2">.gcard{background:linear-gradient(135deg,var(--forest),#2A4E47);border-radius:17px;padding:20px;text-align:center;margin-bottom:13px;}</p>
-<p class="p2">.gcard h3{font-family:'Cormorant Garamond',serif;color:white;font-size:20px;margin-bottom:5px;}</p>
-<p class="p2">.gcard p{color:#7EA09A;font-size:11px;font-weight:300;margin-bottom:14px;}</p>
-<p class="p2">.ring-wrap{position:relative;width:72px;height:72px;margin:0 auto 10px;}</p>
-<p class="p2">.ring-svg{transform:rotate(-90deg);}</p>
-<p class="p2">.ring-bg{fill:none;stroke:rgba(255,255,255,.1);stroke-width:6;}</p>
-<p class="p2">.ring-fill{fill:none;stroke:url(#rg);stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset .5s;}</p>
-<p class="p2">.ring-count{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:19px;color:white;}</p>
-<p class="p3"><br></p>
-<p class="p2">/* ── Q NAV ── */</p>
-<p class="p2">.qnav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}</p>
-<p class="p2">.qnav-btn{background:var(--forest);color:white;border:none;width:36px;height:36px;border-radius:8px;font-size:18px;cursor:pointer;transition:opacity .2s;display:flex;align-items:center;justify-content:center;}</p>
-<p class="p2">.qnav-btn:disabled{opacity:.28;cursor:default;}</p>
-<p class="p2">.qnav-info{text-align:center;}</p>
-<p class="p2">.qnav-count{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--forest);}</p>
-<p class="p2">.qnav-lbl{font-size:9px;letter-spacing:2px;color:var(--rose);text-transform:uppercase;}</p>
-<p class="p2">.pdots{display:flex;gap:5px;justify-content:center;margin-bottom:18px;flex-wrap:wrap;}</p>
-<p class="p2">.pdot{width:6px;height:6px;border-radius:50%;background:#EDE4DA;transition:all .3s;}</p>
-<p class="p2">.pdot.done{background:var(--rose);}</p>
-<p class="p2">.pdot.cur{background:var(--forest);transform:scale(1.3);}</p>
-<p class="p3"><br></p>
-<p class="p2">/* ── RECORDER ── */</p>
-<p class="p2">.rec-qcard{background:var(--forest);border-radius:17px;padding:24px 18px;text-align:center;margin-bottom:14px;position:relative;overflow:hidden;}</p>
-<p class="p2">.rec-qcard::before{content:'';position:absolute;top:-38px;right:-38px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(201,149,106,.16) 0%,transparent 70%);}</p>
-<p class="p2">.rec-qlbl{font-size:9px;letter-spacing:3px;color:var(--rose-light);margin-bottom:10px;text-transform:uppercase;}</p>
-<p class="p2">.rec-qtxt{font-family:'Cormorant Garamond',serif;font-size:clamp(16px,5vw,22px);color:white;font-weight:400;line-height:1.4;}</p>
-<p class="p2">.vid-wrap{position:relative;background:#0A1A17;border-radius:14px;overflow:hidden;aspect-ratio:9/16;max-height:280px;margin-bottom:13px;}</p>
-<p class="p2">.vid-wrap video{width:100%;height:100%;object-fit:cover;display:block;}</p>
-<p class="p2">.rec-ind{position:absolute;top:9px;right:9px;background:rgba(220,60,60,.88);color:white;font-size:9px;font-weight:700;letter-spacing:2px;padding:4px 8px;border-radius:18px;display:none;align-items:center;gap:5px;}</p>
-<p class="p2">.rec-ind.show{display:flex;animation:pulse 1.2s infinite;}</p>
-<p class="p2">@keyframes pulse{0%,100%{opacity:1}50%{opacity:.42}}</p>
-<p class="p2">.rec-dot{width:6px;height:6px;border-radius:50%;background:white;}</p>
-<p class="p2">.rec-timer{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.5);color:white;font-size:12px;font-weight:500;padding:3px 11px;border-radius:18px;display:none;}</p>
-<p class="p2">.rec-timer.show{display:block;}</p>
-<p class="p2">.play-wrap{background:#0A1A17;border-radius:14px;overflow:hidden;aspect-ratio:9/16;max-height:280px;margin-bottom:13px;display:none;}</p>
-<p class="p2">.play-wrap.show{display:block;}</p>
-<p class="p2">.play-wrap video{width:100%;height:100%;object-fit:cover;}</p>
-<p class="p2">.rec-ctrls{display:flex;flex-direction:column;gap:8px;}</p>
-<p class="p2">.rec-row{display:flex;gap:8px;}</p>
-<p class="p2">.btn-rec{background:#D94040;color:white;flex:1;border:none;padding:13px;border-radius:10px;font-family:'Jost',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .25s;}</p>
-<p class="p2">.btn-rec:hover{box-shadow:0 8px 20px rgba(217,64,64,.35);}</p>
-<p class="p2">.btn-stop{background:#333;color:white;flex:1;border:none;padding:13px;border-radius:10px;font-family:'Jost',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;}</p>
-<p class="p2">.cam-status{text-align:center;font-size:11px;color:#8A9E9B;padding:5px 0;}</p>
-<p class="p3"><br></p>
-<p class="p2">/* ── UPLOAD PROGRESS ── */</p>
-<p class="p2">.upload-bar-wrap{background:#EDE4DA;border-radius:10px;height:6px;margin:8px 0;display:none;}</p>
-<p class="p2">.upload-bar-wrap.show{display:block;}</p>
-<p class="p2">.upload-bar{height:6px;background:linear-gradient(90deg,var(--rose-light),var(--rose));border-radius:10px;width:0%;transition:width .3s;}</p>
-<p class="p2">.upload-status{text-align:center;font-size:11px;color:var(--rose);padding:4px 0;display:none;}</p>
-<p class="p2">.upload-status.show{display:block;}</p>
-<p class="p3"><br></p>
-<p class="p2">/* ── GAME ── */</p>
-<p class="p2">.gscore{display:flex;justify-content:space-around;background:var(--forest);border-radius:13px;padding:12px;margin-bottom:16px;}</p>
-<p class="p2">.gsitem{text-align:center;}</p>
-<p class="p2">.gsval{font-family:'Cormorant Garamond',serif;font-size:24px;color:white;}</p>
-<p class="p2">.gsval.g{color:#7ED4B4;}.gsval.b{color:#E9957A;}.gsval.r{color:var(--rose-light);}</p>
-<p class="p2">.gslbl{font-size:9px;letter-spacing:2px;color:#5E8580;text-transform:uppercase;}</p>
-<p class="p2">.prog-wrap{height:3px;background:#EDE4DA;border-radius:3px;margin-bottom:20px;}</p>
-<p class="p2">.prog-bar{height:3px;background:linear-gradient(90deg,var(--rose-light),var(--rose));border-radius:3px;transition:width .5s;}</p>
-<p class="p2">.qcard{background:var(--forest);border-radius:19px;padding:26px 20px;text-align:center;margin-bottom:16px;position:relative;overflow:hidden;}</p>
-<p class="p2">.qcard::before{content:'';position:absolute;top:-42px;right:-42px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(201,149,106,.16) 0%,transparent 70%);}</p>
-<p class="p2">.qcard-lbl{font-size:9px;letter-spacing:3px;color:var(--rose-light);margin-bottom:11px;text-transform:uppercase;}</p>
-<p class="p2">.qcard-txt{font-family:'Cormorant Garamond',serif;font-size:clamp(17px,5vw,24px);color:white;font-weight:400;line-height:1.4;}</p>
-<p class="p2">.gvid-wrap{background:#0A1A17;border-radius:15px;overflow:hidden;aspect-ratio:9/16;max-height:300px;margin-bottom:13px;display:none;position:relative;}</p>
-<p class="p2">.gvid-wrap.show{display:block;}</p>
-<p class="p2">.gvid-wrap video{width:100%;height:100%;object-fit:cover;}</p>
-<p class="p2">.play-ov{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.28);cursor:pointer;}</p>
-<p class="p2">.play-circle{width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;font-size:21px;padding-left:4px;}</p>
-<p class="p2">.ans-reveal{background:white;border-radius:15px;padding:18px 16px;margin-bottom:13px;display:none;}</p>
-<p class="p2">.ans-reveal.show{display:block;animation:fuup .4s ease;}</p>
-<p class="p2">@keyframes fuup{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}</p>
-<p class="p2">.ar-lbl{font-size:9px;letter-spacing:2.5px;color:var(--rose);text-transform:uppercase;margin-bottom:5px;}</p>
-<p class="p2">.ar-txt{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--forest);font-style:italic;}</p>
-<p class="p2">.novid{background:rgba(201,149,106,.1);border:1px solid var(--rose-pale);border-radius:10px;padding:11px 13px;margin-bottom:13px;font-size:11px;color:#96714F;display:none;}</p>
-<p class="p2">.novid.show{display:block;}</p>
-<p class="p2">.gactions{display:flex;flex-direction:column;gap:8px;}</p>
-<p class="p2">.rbts{display:flex;gap:8px;}</p>
-<p class="p2">.btn-ok{background:#E8F5F0;color:#2A7A5E;border:1.5px solid #B8E0D2;flex:1;border-radius:10px;padding:12px;font-family:'Jost',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;}</p>
-<p class="p2">.btn-ko{background:#FBF0EC;color:#C05C3C;border:1.5px solid #F0C4B4;flex:1;border-radius:10px;padding:12px;font-family:'Jost',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;}</p>
-<p class="p3"><br></p>
-<p class="p2">/* ── END ── */</p>
-<p class="p2">.endwrap{text-align:center;padding:32px 14px;}</p>
-<p class="p2">.end-t{font-size:60px;margin-bottom:16px;}</p>
-<p class="p2">.end-h{font-family:'Cormorant Garamond',serif;font-size:34px;color:var(--forest);margin-bottom:6px;}</p>
-<p class="p2">.end-s{font-size:12px;color:#8A9E9B;font-weight:300;margin-bottom:24px;}</p>
-<p class="p2">.end-sc{display:inline-flex;gap:22px;background:var(--forest);border-radius:16px;padding:18px 26px;margin-bottom:22px;}</p>
-<p class="p2">.esi{text-align:center;}</p>
-<p class="p2">.esv{font-family:'Cormorant Garamond',serif;font-size:40px;color:white;}</p>
-<p class="p2">.esv.g{color:#7ED4B4;}.esv.b{color:#E9957A;}</p>
-<p class="p2">.esl{font-size:9px;letter-spacing:2px;color:#5E8580;text-transform:uppercase;}</p>
-<p class="p3"><br></p>
-<p class="p2">/* ── LOADING ── */</p>
-<p class="p2">.loader{display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;gap:14px;}</p>
-<p class="p2">.loader.show{display:flex;}</p>
-<p class="p2">.spinner{width:36px;height:36px;border:3px solid var(--rose-pale);border-top-color:var(--rose);border-radius:50%;animation:spin .8s linear infinite;}</p>
-<p class="p2">@keyframes spin{to{transform:rotate(360deg)}}</p>
-<p class="p2">.loader p{font-size:12px;color:#8A9E9B;font-weight:300;}</p>
-<p class="p3"><br></p>
-<p class="p2">/* ── OVERLAY ── */</p>
-<p class="p2">.ov{display:none;position:fixed;inset:0;background:rgba(12,28,24,.88);backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center;}</p>
-<p class="p2">.ov.show{display:flex;animation:fin .3s;}</p>
-<p class="p2">@keyframes fin{from{opacity:0}to{opacity:1}}</p>
-<p class="p2">.modal{background:var(--cream);border-radius:24px;padding:38px 26px;text-align:center;max-width:300px;width:90%;animation:pin .4s cubic-bezier(.34,1.56,.64,1);}</p>
-<p class="p2">@keyframes pin{from{transform:scale(.72)}to{transform:scale(1)}}</p>
-<p class="p2">.modal-ic{font-size:52px;margin-bottom:11px;}</p>
-<p class="p2">.modal-h{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--forest);margin-bottom:5px;}</p>
-<p class="p2">.modal-s{font-size:12px;color:#8A9E9B;font-weight:300;margin-bottom:20px;}</p>
-<p class="p2">.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--forest);color:white;padding:9px 18px;border-radius:26px;font-size:12px;opacity:0;transition:opacity .3s;z-index:300;white-space:nowrap;pointer-events:none;}</p>
-<p class="p2">.toast.show{opacity:1;}</p>
-<p class="p2">&lt;/style&gt;</p>
-<p class="p2">&lt;/head&gt;</p>
-<p class="p2">&lt;body&gt;</p>
-<p class="p3"><br></p>
-<p class="p2">&lt;!-- ═══ LANDING ═══ --&gt;</p>
-<p class="p2">&lt;div class="screen active" id="screen-landing"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;div class="land-logo-txt"&gt;WEVOW&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;div class="land-w"&gt;&lt;svg viewBox="0 0 24 24"&gt;&lt;path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402C1 4.018 3.225 2 6.002 2 8.23 2 9.959 3.472 12 5.907 14.041 3.472 15.77 2 18 2c2.777 0 5 2.018 5 5.191 0 4.105-5.37 8.863-11 14.402z"/&gt;&lt;/svg&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;h1 class="land-title"&gt;Il a&lt;br&gt;dit &lt;em&gt;quoi ?&lt;/em&gt;&lt;/h1&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;p class="land-sub"&gt;Est-ce que Manon connaît vraiment Hugo ? Il répond en vidéo… elle boit si elle se trompe ! 🥂&lt;/p&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;div class="land-btns"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;button class="lbtn lbtn-p" onclick="goTo('screen-setup')"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="lbtn-icon"&gt;📝&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div&gt;&lt;div class="lbtn-label"&gt;Organiser le quiz&lt;/div&gt;&lt;div class="lbtn-desc"&gt;Créer les questions • Obtenir le code&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;button class="lbtn lbtn-s" onclick="goTo('screen-groom-join')"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="lbtn-icon"&gt;🤵&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div&gt;&lt;div class="lbtn-label"&gt;Je suis le marié&lt;/div&gt;&lt;div class="lbtn-desc"&gt;Entrer mon code • Filmer mes réponses&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;button class="lbtn lbtn-s" onclick="goTo('screen-game-join')"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="lbtn-icon"&gt;🥂&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div&gt;&lt;div class="lbtn-label"&gt;Lancer le jeu !&lt;/div&gt;&lt;div class="lbtn-desc"&gt;Mode EVJF — le jour J&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2">&lt;/div&gt;</p>
-<p class="p3"><br></p>
-<p class="p2">&lt;!-- ═══ SETUP ═══ --&gt;</p>
-<p class="p2">&lt;div class="screen" id="screen-setup"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;div class="app-header"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="ah-logo"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="ah-icon"&gt;&lt;svg viewBox="0 0 24 24"&gt;&lt;path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402C1 4.018 3.225 2 6.002 2 8.23 2 9.959 3.472 12 5.907 14.041 3.472 15.77 2 18 2c2.777 0 5 2.018 5 5.191 0 4.105-5.37 8.863-11 14.402z"/&gt;&lt;/svg&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;span class="ah-name"&gt;WEVOW&lt;/span&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;button class="back-btn" onclick="goTo('screen-landing')"&gt;← Retour&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;div class="screen-body"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="stabs"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;button class="stab active" onclick="stab('q')"&gt;📝 Questions&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;button class="stab" onclick="stab('n')"&gt;👤 Prénoms&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;button class="stab" onclick="stab('s')"&gt;🔗 Partager&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p3"><br></p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;!-- QUESTIONS --&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="sp active" id="sp-q"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="card"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;h3&gt;Nouvelle question&lt;/h3&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;p&gt;Le marié répondra en vidéo à chacune&lt;/p&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;div class="field"&gt;&lt;label&gt;Ta question&lt;/label&gt;&lt;textarea id="new-q" rows="2" placeholder="ex : Quel est le plat préféré de ta future femme ?"&gt;&lt;/textarea&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;button class="btn btn-p" onclick="addQ()"&gt;+ Ajouter&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;button class="btn btn-g" onclick="loadDef()" style="margin-top:8px"&gt;✨ Charger 10 questions types&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="card"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;h3&gt;Questions (&lt;span id="qcount"&gt;0&lt;/span&gt;) &lt;span id="vcbadge" style="color:var(--rose);font-size:12px"&gt;&lt;/span&gt;&lt;/h3&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;div id="qlist" class="ql"&gt;&lt;div class="empty"&gt;&lt;div class="ei"&gt;💭&lt;/div&gt;&lt;p&gt;Aucune question encore.&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;button class="btn btn-f" onclick="saveSession()" id="btn-save-session"&gt;☁️ Sauvegarder sur Supabase&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="loader" id="save-loader"&gt;&lt;div class="spinner"&gt;&lt;/div&gt;&lt;p&gt;Sauvegarde en cours…&lt;/p&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p3"><br></p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;!-- NOMS --&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="sp" id="sp-n"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="card"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;h3&gt;Les mariés 💑&lt;/h3&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;p&gt;Pour personnaliser le jeu&lt;/p&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;div class="field"&gt;&lt;label&gt;Prénom de la mariée&lt;/label&gt;&lt;input type="text" id="bride-name" value="Manon"&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;div class="field"&gt;&lt;label&gt;Prénom du marié&lt;/label&gt;&lt;input type="text" id="groom-name" value="Hugo"&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;button class="btn btn-p" onclick="stab('q');showToast('Sauvegardé ✓')"&gt;OK&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p3"><br></p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;!-- PARTAGER --&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="sp" id="sp-s"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div id="share-no-session" class="card" style="text-align:center"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;div class="empty"&gt;&lt;div class="ei"&gt;☁️&lt;/div&gt;&lt;p&gt;Sauvegarde d'abord tes questions&lt;br&gt;pour obtenir un code de partage.&lt;/p&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;button class="btn btn-p" onclick="stab('q')" style="margin-top:8px"&gt;← Questions&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div id="share-code-box" style="display:none"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;div class="code-box"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">          </span>&lt;p&gt;Code à envoyer au marié 📲&lt;/p&gt;</p>
-<p class="p2"><span class="Apple-converted-space">          </span>&lt;div class="code-val" id="session-code-disp"&gt;——&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">          </span>&lt;div class="code-hint"&gt;Il entre ce code dans "Je suis le marié"&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;div class="card" style="text-align:center"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">          </span>&lt;p style="margin-bottom:12px;font-size:12px;color:#8A9E9B"&gt;Partage ce lien directement 👇&lt;/p&gt;</p>
-<p class="p2"><span class="Apple-converted-space">          </span>&lt;div id="share-url" style="font-size:11px;color:var(--rose);word-break:break-all;margin-bottom:14px;font-family:monospace;background:var(--cream);padding:10px;border-radius:8px;"&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">          </span>&lt;button class="btn btn-p" onclick="copyLink()"&gt;📋 Copier le lien&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2">&lt;/div&gt;</p>
-<p class="p3"><br></p>
-<p class="p2">&lt;!-- ═══ GROOM JOIN ═══ --&gt;</p>
-<p class="p2">&lt;div class="screen" id="screen-groom-join"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;div class="app-header"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="ah-logo"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="ah-icon"&gt;&lt;svg viewBox="0 0 24 24"&gt;&lt;path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402C1 4.018 3.225 2 6.002 2 8.23 2 9.959 3.472 12 5.907 14.041 3.472 15.77 2 18 2c2.777 0 5 2.018 5 5.191 0 4.105-5.37 8.863-11 14.402z"/&gt;&lt;/svg&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;span class="ah-name"&gt;WEVOW&lt;/span&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;button class="back-btn" onclick="goTo('screen-landing')"&gt;← Retour&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;div class="screen-body"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="join-box"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;h3&gt;Bonjour le marié 🤵&lt;/h3&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;p&gt;Entre le code que l'organisatrice t'a envoyé&lt;/p&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="field"&gt;&lt;label&gt;Code de session&lt;/label&gt;&lt;input type="text" id="groom-code-input" class="code-input" maxlength="6" placeholder="ABC123" oninput="this.value=this.value.toUpperCase()"&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;button class="btn btn-p" onclick="groomJoin()"&gt;Rejoindre →&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="loader" id="groom-join-loader"&gt;&lt;div class="spinner"&gt;&lt;/div&gt;&lt;p&gt;Chargement…&lt;/p&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2">&lt;/div&gt;</p>
-<p class="p3"><br></p>
-<p class="p2">&lt;!-- ═══ GROOM RECORD ═══ --&gt;</p>
-<p class="p2">&lt;div class="screen" id="screen-groom"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;div class="app-header"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="ah-logo"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="ah-icon"&gt;&lt;svg viewBox="0 0 24 24"&gt;&lt;path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402C1 4.018 3.225 2 6.002 2 8.23 2 9.959 3.472 12 5.907 14.041 3.472 15.77 2 18 2c2.777 0 5 2.018 5 5.191 0 4.105-5.37 8.863-11 14.402z"/&gt;&lt;/svg&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;span class="ah-name"&gt;WEVOW&lt;/span&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;button class="back-btn" onclick="groomLeave()"&gt;← Retour&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;div class="screen-body"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="gcard"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;h3&gt;Bonjour &lt;span id="gname-disp"&gt;Hugo&lt;/span&gt; 🤵&lt;/h3&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;p&gt;Réponds à chaque question en vidéo !&lt;/p&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="ring-wrap"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;svg class="ring-svg" width="72" height="72" viewBox="0 0 72 72"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">          </span>&lt;defs&gt;&lt;linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%"&gt;&lt;stop offset="0%" style="stop-color:#D4A98A"/&gt;&lt;stop offset="100%" style="stop-color:#C9956A"/&gt;&lt;/linearGradient&gt;&lt;/defs&gt;</p>
-<p class="p2"><span class="Apple-converted-space">          </span>&lt;circle class="ring-bg" cx="36" cy="36" r="30"/&gt;</p>
-<p class="p2"><span class="Apple-converted-space">          </span>&lt;circle class="ring-fill" id="ring-fill" cx="36" cy="36" r="30" stroke-dasharray="188.5" stroke-dashoffset="188.5"/&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;/svg&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;div class="ring-count" id="ring-count"&gt;0/0&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div style="color:#7EA09A;font-size:10px;letter-spacing:2px"&gt;VIDÉOS ENREGISTRÉES&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p3"><br></p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="qnav"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;button class="qnav-btn" id="g-prev" onclick="gNav(-1)"&gt;‹&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="qnav-info"&gt;&lt;div class="qnav-count" id="g-nav-c"&gt;1/1&lt;/div&gt;&lt;div class="qnav-lbl"&gt;Question&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;button class="qnav-btn" id="g-next" onclick="gNav(1)"&gt;›&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="pdots" id="g-dots"&gt;&lt;/div&gt;</p>
-<p class="p3"><br></p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="rec-qcard"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="rec-qlbl"&gt;<span class="s1">✦</span> Ta question <span class="s1">✦</span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="rec-qtxt" id="g-qtxt"&gt;…&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p3"><br></p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="vid-wrap" id="preview-wrap"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;video id="cam-preview" autoplay muted playsinline&gt;&lt;/video&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="rec-ind" id="rec-ind"&gt;&lt;div class="rec-dot"&gt;&lt;/div&gt;REC&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="rec-timer" id="rec-timer"&gt;0:00&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="play-wrap" id="play-wrap"&gt;&lt;video id="play-vid" controls playsinline&gt;&lt;/video&gt;&lt;/div&gt;</p>
-<p class="p3"><br></p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="rec-ctrls"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="rec-row" id="row1"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;button class="btn-rec" id="btn-start" onclick="startRec()"&gt;<span class="s2">⏺</span> Enregistrer&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;button class="btn-stop" id="btn-stop" onclick="stopRec()" style="display:none"&gt;<span class="s2">⏹</span> Stopper&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div id="row2" style="display:none;flex-direction:column;gap:8px"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;button class="btn btn-p" id="btn-upload" onclick="saveAndUpload()"&gt;☁️ Sauvegarder sur Supabase&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;button class="btn btn-g" onclick="retakeVid()"&gt;🔄 Recommencer&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="upload-bar-wrap" id="upload-bar-wrap"&gt;&lt;div class="upload-bar" id="upload-bar"&gt;&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="upload-status" id="upload-status"&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="cam-status" id="cam-status"&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2">&lt;/div&gt;</p>
-<p class="p3"><br></p>
-<p class="p2">&lt;!-- ═══ GAME JOIN ═══ --&gt;</p>
-<p class="p2">&lt;div class="screen" id="screen-game-join"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;div class="app-header"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="ah-logo"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="ah-icon"&gt;&lt;svg viewBox="0 0 24 24"&gt;&lt;path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402C1 4.018 3.225 2 6.002 2 8.23 2 9.959 3.472 12 5.907 14.041 3.472 15.77 2 18 2c2.777 0 5 2.018 5 5.191 0 4.105-5.37 8.863-11 14.402z"/&gt;&lt;/svg&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;span class="ah-name"&gt;WEVOW&lt;/span&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;button class="back-btn" onclick="goTo('screen-landing')"&gt;← Retour&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;div class="screen-body"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="join-box"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;h3&gt;Lancer le jeu 🥂&lt;/h3&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;p&gt;Entre le code de la session pour charger les questions et vidéos&lt;/p&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="field"&gt;&lt;label&gt;Code de session&lt;/label&gt;&lt;input type="text" id="game-code-input" class="code-input" maxlength="6" placeholder="ABC123" oninput="this.value=this.value.toUpperCase()"&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;button class="btn btn-p" onclick="gameJoin()"&gt;C'est parti ! →&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="loader" id="game-join-loader"&gt;&lt;div class="spinner"&gt;&lt;/div&gt;&lt;p&gt;Chargement…&lt;/p&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2">&lt;/div&gt;</p>
-<p class="p3"><br></p>
-<p class="p2">&lt;!-- ═══ GAME ═══ --&gt;</p>
-<p class="p2">&lt;div class="screen" id="screen-game"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;div class="app-header"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="ah-logo"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="ah-icon"&gt;&lt;svg viewBox="0 0 24 24"&gt;&lt;path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402C1 4.018 3.225 2 6.002 2 8.23 2 9.959 3.472 12 5.907 14.041 3.472 15.77 2 18 2c2.777 0 5 2.018 5 5.191 0 4.105-5.37 8.863-11 14.402z"/&gt;&lt;/svg&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;span class="ah-name"&gt;WEVOW&lt;/span&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;button class="back-btn" onclick="goTo('screen-landing')"&gt;Quitter&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;div class="screen-body"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="gscore"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="gsitem"&gt;&lt;div class="gsval g" id="gs-c"&gt;0&lt;/div&gt;&lt;div class="gslbl"&gt;✓ Bonnes&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="gsitem"&gt;&lt;div class="gsval b" id="gs-w"&gt;0&lt;/div&gt;&lt;div class="gslbl"&gt;🥂 Verres&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="gsitem"&gt;&lt;div class="gsval r" id="gs-r"&gt;0&lt;/div&gt;&lt;div class="gslbl"&gt;Restantes&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p3"><br></p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div id="game-content"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;span style="font-size:9px;letter-spacing:2px;color:var(--rose);text-transform:uppercase"&gt;Question&lt;/span&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;span style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--forest)" id="g-qi"&gt;1/1&lt;/span&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="prog-wrap"&gt;&lt;div class="prog-bar" id="g-prog" style="width:0%"&gt;&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="qcard"&gt;&lt;div class="qcard-lbl"&gt;<span class="s1">✦</span> Il a dit… <span class="s1">✦</span>&lt;/div&gt;&lt;div class="qcard-txt" id="g-qtxt2"&gt;…&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="gvid-wrap" id="g-vwrap"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;video id="g-vplayer" playsinline&gt;&lt;/video&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;div class="play-ov" id="g-play-ov" onclick="playGVid()"&gt;&lt;div class="play-circle"&gt;▶&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="novid" id="g-novid"&gt;⚠️ Pas de vidéo pour cette question — le marié n'a pas encore filmé.&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="gactions" id="g-actions"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;button class="btn btn-p" id="g-btn-rev" onclick="revealAns()"&gt;▶ Lancer la vidéo du marié&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;div class="rbts" id="g-rbts" style="display:none"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">          </span>&lt;button class="btn-ok" onclick="markR(true)"&gt;✓ Bonne !&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">          </span>&lt;button class="btn-ko" onclick="markR(false)"&gt;🥂 Elle boit !&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;button class="btn btn-f" id="g-btn-next" onclick="nextQ()" style="display:none"&gt;Question suivante →&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p3"><br></p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="endwrap" id="g-end" style="display:none"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="end-t"&gt;🏆&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;h2 class="end-h" id="g-eh"&gt;Bravo !&lt;/h2&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;p class="end-s" id="g-es"&gt;&lt;/p&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="end-sc"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;div class="esi"&gt;&lt;div class="esv g" id="g-fc"&gt;0&lt;/div&gt;&lt;div class="esl"&gt;Bonnes&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;div class="esi"&gt;&lt;div class="esv b" id="g-fw"&gt;0&lt;/div&gt;&lt;div class="esl"&gt;Verres&lt;/div&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;button class="btn btn-p" onclick="restartG()" style="max-width:260px;margin:0 auto 8px"&gt;🔁 Rejouer&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;button class="btn btn-g" onclick="goTo('screen-landing')" style="max-width:260px;margin:0 auto"&gt;← Accueil&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2">&lt;/div&gt;</p>
-<p class="p3"><br></p>
-<p class="p2">&lt;!-- DRINK OVERLAY --&gt;</p>
-<p class="p2">&lt;div class="ov" id="drink-ov" onclick="closeDrink()"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;div class="modal" onclick="event.stopPropagation()"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="modal-ic"&gt;🥂&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="modal-h" id="drink-name"&gt;Manon&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="modal-s"&gt;N'a pas la bonne réponse…&lt;br&gt;&lt;strong&gt;Elle boit un verre !&lt;/strong&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;button class="btn btn-p" onclick="closeDrink()"&gt;Tchin tchin ! 🥂&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2">&lt;/div&gt;</p>
-<p class="p2">&lt;div class="toast" id="toast"&gt;&lt;/div&gt;</p>
-<p class="p3"><br></p>
-<p class="p2">&lt;script&gt;</p>
-<p class="p2">/* ══════════════════════════════════════════</p>
-<p class="p2"><span class="Apple-converted-space">   </span>⚠️<span class="Apple-converted-space">  </span>REMPLIS CES DEUX VALEURS</p>
-<p class="p2"><span class="Apple-converted-space">   </span>Supabase Dashboard → Settings → API</p>
-<p class="p2">══════════════════════════════════════════ */</p>
-<p class="p2">const SUPABASE_URL<span class="Apple-converted-space">  </span>= 'https://kezdvjiomkppbevwidzi.supabase.co';</p>
-<p class="p2">const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtlemR2amlvbWtwcGJldndpZHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NzY1NjAsImV4cCI6MjA5MzA1MjU2MH0._JaNQWHSpop3apBls6bROE4sdfXQUmePg3qlb9TbwoE';</p>
-<p class="p2">const BUCKET<span class="Apple-converted-space">        </span>= 'quiz-videos';</p>
-<p class="p2">/* ══════════════════════════════════════════ */</p>
-<p class="p3"><br></p>
-<p class="p2">const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);</p>
-<p class="p3"><br></p>
-<p class="p2">/* ── STATE ── */</p>
-<p class="p2">let Qs = []; <span class="Apple-converted-space">          </span>// local questions array</p>
-<p class="p2">let sessionId <span class="Apple-converted-space">  </span>= null;</p>
-<p class="p2">let sessionCode = null;</p>
-<p class="p2">let groomSessionId = null;</p>
-<p class="p2">let gIdx = 0, gameIdx = 0;</p>
-<p class="p2">let scores = {c:0,w:0};</p>
-<p class="p2">let answered = false;</p>
-<p class="p2">let camStream = null, mr = null, chunks = [], timerIv = null, recSec = 0, pendBlob = null;</p>
-<p class="p3"><br></p>
-<p class="p2">const DEF = [</p>
-<p class="p2"><span class="Apple-converted-space">  </span>// 🌸 Classiques</p>
-<p class="p2"><span class="Apple-converted-space">  </span>{q:"Comment vous êtes-vous rencontrés la première fois ?"},</p>
-<p class="p2"><span class="Apple-converted-space">  </span>{q:"Où était votre premier rendez-vous ?"},</p>
-<p class="p2"><span class="Apple-converted-space">  </span>{q:"Quel est le plat préféré de Manon ?"},</p>
-<p class="p2"><span class="Apple-converted-space">  </span>{q:"Quel est le voyage de rêve de Manon ?"},</p>
-<p class="p2"><span class="Apple-converted-space">  </span>{q:"Quel est le film ou la série que Manon pourrait regarder en boucle ?"},</p>
-<p class="p2"><span class="Apple-converted-space">  </span>{q:"Si Manon était un personnage de série, ce serait qui ?"},</p>
-<p class="p2"><span class="Apple-converted-space">  </span>{q:"Quelle est la chose dont Manon est la plus fière ?"},</p>
-<p class="p2"><span class="Apple-converted-space">  </span>// 🌶 Un peu plus fun</p>
-<p class="p2"><span class="Apple-converted-space">  </span>{q:"Quel est le plus grand défaut de Manon selon toi ?"},</p>
-<p class="p2"><span class="Apple-converted-space">  </span>{q:"Qu'est-ce que Manon fait qui t'énerve (un tout petit peu) ?"},</p>
-<p class="p2"><span class="Apple-converted-space">  </span>{q:"Que fait Manon quand elle est stressée ?"},</p>
-<p class="p2"><span class="Apple-converted-space">  </span>{q:"Quelle est la pire décision que vous ayez prise ensemble ?"},</p>
-<p class="p2"><span class="Apple-converted-space">  </span>{q:"Qui dit \"je t'aime\" en premier dans le couple ?"},</p>
-<p class="p2"><span class="Apple-converted-space">  </span>{q:"Qui est le plus jaloux des deux ?"},</p>
-<p class="p2"><span class="Apple-converted-space">  </span>{q:"Quelle est la chose la plus folle que Manon t'ait demandé de faire ?"},</p>
-<p class="p2"><span class="Apple-converted-space">  </span>// 🔥 Spicy (mais raisonnables)</p>
-<p class="p2"><span class="Apple-converted-space">  </span>{q:"Qui est le plus dominant dans le couple ?"},</p>
-<p class="p2"><span class="Apple-converted-space">  </span>{q:"Quel est le surnom le plus embarrassant que tu as pour Manon ?"},</p>
-<p class="p2"><span class="Apple-converted-space">  </span>{q:"Si Manon pouvait changer une chose chez toi, ce serait quoi ?"},</p>
-<p class="p2"><span class="Apple-converted-space">  </span>{q:"Quelle est la chose que Manon fait en cachette en pensant que tu ne le sais pas ?"},</p>
-<p class="p2"><span class="Apple-converted-space">  </span>{q:"Décris votre première nuit ensemble en trois mots… sans que ses parents rougissent trop 😏"},</p>
-<p class="p2">];</p>
-<p class="p3"><br></p>
-<p class="p2">/* ── UTILS ── */</p>
-<p class="p2">function goTo(id){</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.querySelectorAll('.screen').forEach(s=&gt;s.classList.remove('active'));</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById(id).classList.add('active');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>// auto-fill code from URL ?code=XXXX</p>
-<p class="p2"><span class="Apple-converted-space">  </span>const urlCode = new URLSearchParams(location.search).get('code');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>if(urlCode){</p>
-<p class="p2"><span class="Apple-converted-space">    </span>const gi = document.getElementById('groom-code-input');</p>
-<p class="p2"><span class="Apple-converted-space">    </span>const gai = document.getElementById('game-code-input');</p>
-<p class="p2"><span class="Apple-converted-space">    </span>if(gi) gi.value = urlCode.toUpperCase();</p>
-<p class="p2"><span class="Apple-converted-space">    </span>if(gai) gai.value = urlCode.toUpperCase();</p>
-<p class="p2"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2">}</p>
-<p class="p2">function showToast(m,dur=2400){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=&gt;t.classList.remove('show'),dur);}</p>
-<p class="p2">function showLoader(id,v){document.getElementById(id).classList.toggle('show',v);}</p>
-<p class="p2">function genCode(){return Math.random().toString(36).substring(2,8).toUpperCase();}</p>
-<p class="p3"><br></p>
-<p class="p2">/* ── SETUP ── */</p>
-<p class="p2">function stab(n){</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.querySelectorAll('.stab').forEach((t,i)=&gt;t.classList.toggle('active',(i===0&amp;&amp;n==='q')||(i===1&amp;&amp;n==='n')||(i===2&amp;&amp;n==='s')));</p>
-<p class="p2"><span class="Apple-converted-space">  </span>['sp-q','sp-n','sp-s'].forEach((id,i)=&gt;document.getElementById(id).classList.toggle('active',['q','n','s'][i]===n));</p>
-<p class="p2"><span class="Apple-converted-space">  </span>if(n==='s') renderShareTab();</p>
-<p class="p2">}</p>
-<p class="p2">function renderShareTab(){</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('share-no-session').style.display = sessionCode ? 'none':'block';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('share-code-box').style.display <span class="Apple-converted-space">  </span>= sessionCode ? 'block':'none';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>if(sessionCode){</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('session-code-disp').textContent = sessionCode;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>const url = `${location.origin}${location.pathname}?code=${sessionCode}`;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('share-url').textContent = url;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2">}</p>
-<p class="p2">function copyLink(){</p>
-<p class="p2"><span class="Apple-converted-space">  </span>const url = `${location.origin}${location.pathname}?code=${sessionCode}`;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>navigator.clipboard.writeText(url).then(()=&gt;showToast('Lien copié ✓'));</p>
-<p class="p2">}</p>
-<p class="p3"><br></p>
-<p class="p2">function addQ(){</p>
-<p class="p2"><span class="Apple-converted-space">  </span>const q=document.getElementById('new-q').value.trim();</p>
-<p class="p2"><span class="Apple-converted-space">  </span>if(!q){showToast('Écris une question !');return;}</p>
-<p class="p2"><span class="Apple-converted-space">  </span>Qs.push({q,video_path:null,video_url:null});</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('new-q').value='';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>renderQL(); showToast('Question ajoutée ✓');</p>
-<p class="p2">}</p>
-<p class="p2">function delQ(i){Qs.splice(i,1);renderQL();}</p>
-<p class="p2">function loadDef(){Qs=DEF.map(d=&gt;({...d,video_path:null,video_url:null}));renderQL();showToast('10 questions chargées ✓');}</p>
-<p class="p2">function renderQL(){</p>
-<p class="p2"><span class="Apple-converted-space">  </span>const vc=Qs.filter(q=&gt;q.video_url).length;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('qcount').textContent=Qs.length;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('vcbadge').textContent=vc?`• 🎬 ${vc} vidéo${vc&gt;1?'s':''}`:'';;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>const el=document.getElementById('qlist');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>if(!Qs.length){el.innerHTML='&lt;div class="empty"&gt;&lt;div class="ei"&gt;💭&lt;/div&gt;&lt;p&gt;Aucune question encore.&lt;/p&gt;&lt;/div&gt;';return;}</p>
-<p class="p2"><span class="Apple-converted-space">  </span>el.innerHTML=Qs.map((q,i)=&gt;`</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;div class="qi ${q.video_url?'hv':''}"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="qnum"&gt;${i+1}&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;div class="qbody"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;div class="qtxt"&gt;${q.q}&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;div class="qmeta"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">          </span>${q.video_url?'&lt;span class="q-vid-b"&gt;🎬 Vidéo enregistrée&lt;/span&gt;':'&lt;span style="font-size:10px;color:#B8C9C7"&gt;En attente de vidéo&lt;/span&gt;'}</p>
-<p class="p2"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span>&lt;button class="q-del" onclick="delQ(${i})"&gt;×&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>&lt;/div&gt;`).join('');</p>
-<p class="p2">}</p>
-<p class="p3"><br></p>
-<p class="p2">/* ── SUPABASE: SAVE SESSION ── */</p>
-<p class="p2">async function saveSession(){</p>
-<p class="p2"><span class="Apple-converted-space">  </span>if(!Qs.length){showToast('Ajoute au moins une question !');return;}</p>
-<p class="p2"><span class="Apple-converted-space">  </span>const btn = document.getElementById('btn-save-session');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>btn.disabled = true; showLoader('save-loader',true);</p>
-<p class="p2"><span class="Apple-converted-space">  </span>try {</p>
-<p class="p2"><span class="Apple-converted-space">    </span>const code = sessionCode || genCode();</p>
-<p class="p2"><span class="Apple-converted-space">    </span>const bride = document.getElementById('bride-name').value || 'La mariée';</p>
-<p class="p2"><span class="Apple-converted-space">    </span>const groom = document.getElementById('groom-name').value || 'Le marié';</p>
-<p class="p3"><br></p>
-<p class="p2"><span class="Apple-converted-space">    </span>// Upsert session</p>
-<p class="p2"><span class="Apple-converted-space">    </span>const {data: sess, error: sessErr} = await sb</p>
-<p class="p2"><span class="Apple-converted-space">      </span>.from('evjf_sessions')</p>
-<p class="p2"><span class="Apple-converted-space">      </span>.upsert({</p>
-<p class="p2"><span class="Apple-converted-space">        </span>...(sessionId ? {id: sessionId} : {}),</p>
-<p class="p2"><span class="Apple-converted-space">        </span>bride_name: bride, groom_name: groom, session_code: code</p>
-<p class="p2"><span class="Apple-converted-space">      </span>}, {onConflict: 'session_code'})</p>
-<p class="p2"><span class="Apple-converted-space">      </span>.select().single();</p>
-<p class="p2"><span class="Apple-converted-space">    </span>if(sessErr) throw sessErr;</p>
-<p class="p3"><br></p>
-<p class="p2"><span class="Apple-converted-space">    </span>sessionId <span class="Apple-converted-space">  </span>= sess.id;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>sessionCode = sess.session_code;</p>
-<p class="p3"><br></p>
-<p class="p2"><span class="Apple-converted-space">    </span>// Delete old questions and re-insert</p>
-<p class="p2"><span class="Apple-converted-space">    </span>await sb.from('evjf_questions').delete().eq('session_id', sessionId);</p>
-<p class="p2"><span class="Apple-converted-space">    </span>const rows = Qs.map((q,i)=&gt;({</p>
-<p class="p2"><span class="Apple-converted-space">      </span>session_id: sessionId, position: i,</p>
-<p class="p2"><span class="Apple-converted-space">      </span>question_text: q.q,</p>
-<p class="p2"><span class="Apple-converted-space">      </span>video_path: q.video_path || null,</p>
-<p class="p2"><span class="Apple-converted-space">      </span>video_url:<span class="Apple-converted-space">  </span>q.video_url<span class="Apple-converted-space">  </span>|| null,</p>
-<p class="p2"><span class="Apple-converted-space">    </span>}));</p>
-<p class="p2"><span class="Apple-converted-space">    </span>const {error: qErr} = await sb.from('evjf_questions').insert(rows);</p>
-<p class="p2"><span class="Apple-converted-space">    </span>if(qErr) throw qErr;</p>
-<p class="p3"><br></p>
-<p class="p2"><span class="Apple-converted-space">    </span>showToast('✅ Sauvegardé sur Supabase !');</p>
-<p class="p2"><span class="Apple-converted-space">    </span>stab('s');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>} catch(e){</p>
-<p class="p2"><span class="Apple-converted-space">    </span>console.error(e);</p>
-<p class="p2"><span class="Apple-converted-space">    </span>showToast('❌ Erreur : ' + (e.message||'Vérifiez vos clés Supabase'));</p>
-<p class="p2"><span class="Apple-converted-space">  </span>} finally {</p>
-<p class="p2"><span class="Apple-converted-space">    </span>btn.disabled=false; showLoader('save-loader',false);</p>
-<p class="p2"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2">}</p>
-<p class="p3"><br></p>
-<p class="p2">/* ── SUPABASE: LOAD SESSION ── */</p>
-<p class="p2">async function loadSession(code){</p>
-<p class="p2"><span class="Apple-converted-space">  </span>const {data: sess, error} = await sb</p>
-<p class="p2"><span class="Apple-converted-space">    </span>.from('evjf_sessions').select('*').eq('session_code', code).single();</p>
-<p class="p2"><span class="Apple-converted-space">  </span>if(error || !sess) throw new Error('Session introuvable pour ce code');</p>
-<p class="p3"><br></p>
-<p class="p2"><span class="Apple-converted-space">  </span>const {data: qs, error: qErr} = await sb</p>
-<p class="p2"><span class="Apple-converted-space">    </span>.from('evjf_questions').select('*')</p>
-<p class="p2"><span class="Apple-converted-space">    </span>.eq('session_id', sess.id).order('position');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>if(qErr) throw qErr;</p>
-<p class="p3"><br></p>
-<p class="p2"><span class="Apple-converted-space">  </span>return {sess, qs};</p>
-<p class="p2">}</p>
-<p class="p3"><br></p>
-<p class="p2">/* ── GROOM JOIN ── */</p>
-<p class="p2">async function groomJoin(){</p>
-<p class="p2"><span class="Apple-converted-space">  </span>const code = document.getElementById('groom-code-input').value.trim().toUpperCase();</p>
-<p class="p2"><span class="Apple-converted-space">  </span>if(code.length &lt; 4){showToast('Entre un code valide');return;}</p>
-<p class="p2"><span class="Apple-converted-space">  </span>showLoader('groom-join-loader',true);</p>
-<p class="p2"><span class="Apple-converted-space">  </span>try {</p>
-<p class="p2"><span class="Apple-converted-space">    </span>const {sess, qs} = await loadSession(code);</p>
-<p class="p2"><span class="Apple-converted-space">    </span>groomSessionId = sess.id;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>Qs = qs.map(q=&gt;({q:q.question_text, id:q.id, video_path:q.video_path, video_url:q.video_url}));</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('gname-disp').textContent = sess.groom_name;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>gIdx=0; goTo('screen-groom'); renderGroomQ(); startCam();</p>
-<p class="p2"><span class="Apple-converted-space">  </span>} catch(e){</p>
-<p class="p2"><span class="Apple-converted-space">    </span>showToast('❌ ' + e.message);</p>
-<p class="p2"><span class="Apple-converted-space">  </span>} finally {</p>
-<p class="p2"><span class="Apple-converted-space">    </span>showLoader('groom-join-loader',false);</p>
-<p class="p2"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2">}</p>
-<p class="p3"><br></p>
-<p class="p2">/* ── GAME JOIN ── */</p>
-<p class="p2">async function gameJoin(){</p>
-<p class="p2"><span class="Apple-converted-space">  </span>const code = document.getElementById('game-code-input').value.trim().toUpperCase();</p>
-<p class="p2"><span class="Apple-converted-space">  </span>if(code.length &lt; 4){showToast('Entre un code valide');return;}</p>
-<p class="p2"><span class="Apple-converted-space">  </span>showLoader('game-join-loader',true);</p>
-<p class="p2"><span class="Apple-converted-space">  </span>try {</p>
-<p class="p2"><span class="Apple-converted-space">    </span>const {sess, qs} = await loadSession(code);</p>
-<p class="p2"><span class="Apple-converted-space">    </span>sessionId = sess.id;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('bride-name').value = sess.bride_name;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('groom-name').value = sess.groom_name;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>Qs = qs.map(q=&gt;({q:q.question_text, id:q.id, video_path:q.video_path, video_url:q.video_url}));</p>
-<p class="p2"><span class="Apple-converted-space">    </span>gameIdx=0; scores={c:0,w:0}; answered=false;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('g-end').style.display='none';</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('game-content').style.display='block';</p>
-<p class="p2"><span class="Apple-converted-space">    </span>goTo('screen-game'); loadGameQ();</p>
-<p class="p2"><span class="Apple-converted-space">  </span>} catch(e){</p>
-<p class="p2"><span class="Apple-converted-space">    </span>showToast('❌ ' + e.message);</p>
-<p class="p2"><span class="Apple-converted-space">  </span>} finally {</p>
-<p class="p2"><span class="Apple-converted-space">    </span>showLoader('game-join-loader',false);</p>
-<p class="p2"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2">}</p>
-<p class="p3"><br></p>
-<p class="p2">/* ── GROOM RECORDER ── */</p>
-<p class="p2">function renderGroomQ(){</p>
-<p class="p2"><span class="Apple-converted-space">  </span>const q=Qs[gIdx];</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('g-qtxt').textContent=q.q;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('g-nav-c').textContent=`${gIdx+1}/${Qs.length}`;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>const done=Qs.filter(x=&gt;x.video_url).length;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>const circ=188.5;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('ring-fill').style.strokeDashoffset=circ-(done/Qs.length)*circ;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('ring-count').textContent=`${done}/${Qs.length}`;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('g-dots').innerHTML=Qs.map((_,i)=&gt;`&lt;div class="pdot ${i&lt;gIdx?'done':i===gIdx?'cur':''}"&gt;&lt;/div&gt;`).join('');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('g-prev').disabled=gIdx===0;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('g-next').disabled=gIdx===Qs.length-1;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>pendBlob=null;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('play-wrap').classList.remove('show');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('row2').style.display='none';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('row1').style.display='flex';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('btn-start').style.display='block';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('btn-stop').style.display='none';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('rec-ind').classList.remove('show');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('rec-timer').classList.remove('show');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('preview-wrap').style.display='block';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('upload-bar-wrap').classList.remove('show');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('upload-status').classList.remove('show');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>if(q.video_url){</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('play-vid').src=q.video_url;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('play-wrap').classList.add('show');</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('preview-wrap').style.display='none';</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('cam-status').textContent='✅ Vidéo déjà enregistrée';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>} else {</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('cam-status').textContent='';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2">}</p>
-<p class="p2">function gNav(d){gIdx=Math.max(0,Math.min(Qs.length-1,gIdx+d));renderGroomQ();}</p>
-<p class="p3"><br></p>
-<p class="p2">async function startCam(){</p>
-<p class="p2"><span class="Apple-converted-space">  </span>const st=document.getElementById('cam-status');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>try {</p>
-<p class="p2"><span class="Apple-converted-space">    </span>camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:true});</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('cam-preview').srcObject=camStream;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>st.textContent='📷 Caméra prête'; setTimeout(()=&gt;{if(st.textContent==='📷 Caméra prête')st.textContent='';},2000);</p>
-<p class="p2"><span class="Apple-converted-space">  </span>} catch(e){ st.textContent='⚠️ Accès caméra refusé'; }</p>
-<p class="p2">}</p>
-<p class="p2">function groomLeave(){</p>
-<p class="p2"><span class="Apple-converted-space">  </span>if(camStream){camStream.getTracks().forEach(t=&gt;t.stop());camStream=null;}</p>
-<p class="p2"><span class="Apple-converted-space">  </span>goTo('screen-landing');</p>
-<p class="p2">}</p>
-<p class="p3"><br></p>
-<p class="p2">function startRec(){</p>
-<p class="p2"><span class="Apple-converted-space">  </span>if(!camStream){showToast('Caméra non disponible');return;}</p>
-<p class="p2"><span class="Apple-converted-space">  </span>chunks=[];pendBlob=null;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>const mt=MediaRecorder.isTypeSupported('video/webm;codecs=vp9')?'video/webm;codecs=vp9':</p>
-<p class="p2"><span class="Apple-converted-space">           </span>MediaRecorder.isTypeSupported('video/webm')?'video/webm':'video/mp4';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>mr=new MediaRecorder(camStream,{mimeType:mt});</p>
-<p class="p2"><span class="Apple-converted-space">  </span>mr.ondataavailable=e=&gt;{if(e.data.size&gt;0)chunks.push(e.data);};</p>
-<p class="p2"><span class="Apple-converted-space">  </span>mr.onstop=()=&gt;{</p>
-<p class="p2"><span class="Apple-converted-space">    </span>pendBlob=new Blob(chunks,{type:mt});</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('play-vid').src=URL.createObjectURL(pendBlob);</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('play-wrap').classList.add('show');</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('preview-wrap').style.display='none';</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('row1').style.display='none';</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('row2').style.display='flex';</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('row2').style.flexDirection='column';</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('cam-status').textContent='👆 Vérifiez puis sauvegardez sur Supabase';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>};</p>
-<p class="p2"><span class="Apple-converted-space">  </span>mr.start(100);</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('btn-start').style.display='none';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('btn-stop').style.display='block';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('rec-ind').classList.add('show');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('rec-timer').classList.add('show');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>recSec=0;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>timerIv=setInterval(()=&gt;{recSec++;const m=Math.floor(recSec/60),s=recSec%60;document.getElementById('rec-timer').textContent=`${m}:${s.toString().padStart(2,'0')}`;},1000);</p>
-<p class="p2">}</p>
-<p class="p2">function stopRec(){</p>
-<p class="p2"><span class="Apple-converted-space">  </span>if(mr&amp;&amp;mr.state!=='inactive')mr.stop();</p>
-<p class="p2"><span class="Apple-converted-space">  </span>clearInterval(timerIv);</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('rec-ind').classList.remove('show');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('rec-timer').classList.remove('show');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('btn-stop').style.display='none';</p>
-<p class="p2">}</p>
-<p class="p2">function retakeVid(){</p>
-<p class="p2"><span class="Apple-converted-space">  </span>pendBlob=null;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('play-wrap').classList.remove('show');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('preview-wrap').style.display='block';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('row1').style.display='flex';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('row2').style.display='none';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('btn-start').style.display='block';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('btn-stop').style.display='none';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('cam-status').textContent='';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('upload-bar-wrap').classList.remove('show');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('upload-status').classList.remove('show');</p>
-<p class="p2">}</p>
-<p class="p3"><br></p>
-<p class="p2">async function saveAndUpload(){</p>
-<p class="p2"><span class="Apple-converted-space">  </span>if(!pendBlob){showToast('Enregistre d\'abord une vidéo');return;}</p>
-<p class="p2"><span class="Apple-converted-space">  </span>const btn=document.getElementById('btn-upload');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>btn.disabled=true;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('upload-bar-wrap').classList.add('show');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('upload-status').classList.add('show');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('upload-status').textContent='⬆️ Upload en cours…';</p>
-<p class="p3"><br></p>
-<p class="p2"><span class="Apple-converted-space">  </span>try {</p>
-<p class="p2"><span class="Apple-converted-space">    </span>const ext = pendBlob.type.includes('mp4') ? 'mp4' : 'webm';</p>
-<p class="p2"><span class="Apple-converted-space">    </span>const path = `${groomSessionId}/q_${gIdx}.${ext}`;</p>
-<p class="p3"><br></p>
-<p class="p2"><span class="Apple-converted-space">    </span>// Fake progress while uploading</p>
-<p class="p2"><span class="Apple-converted-space">    </span>let prog=0;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>const fakeIv=setInterval(()=&gt;{prog=Math.min(prog+5,90);document.getElementById('upload-bar').style.width=prog+'%';},200);</p>
-<p class="p3"><br></p>
-<p class="p2"><span class="Apple-converted-space">    </span>const {error:upErr} = await sb.storage.from(BUCKET).upload(path, pendBlob, {upsert:true, contentType:pendBlob.type});</p>
-<p class="p2"><span class="Apple-converted-space">    </span>clearInterval(fakeIv);</p>
-<p class="p2"><span class="Apple-converted-space">    </span>if(upErr) throw upErr;</p>
-<p class="p3"><br></p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('upload-bar').style.width='100%';</p>
-<p class="p3"><br></p>
-<p class="p2"><span class="Apple-converted-space">    </span>const {data:urlData} = sb.storage.from(BUCKET).getPublicUrl(path);</p>
-<p class="p2"><span class="Apple-converted-space">    </span>const publicUrl = urlData.publicUrl;</p>
-<p class="p3"><br></p>
-<p class="p2"><span class="Apple-converted-space">    </span>// Update DB</p>
-<p class="p2"><span class="Apple-converted-space">    </span>const qId = Qs[gIdx].id;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>if(qId){</p>
-<p class="p2"><span class="Apple-converted-space">      </span>await sb.from('evjf_questions').update({video_path:path, video_url:publicUrl, recorded_at: new Date().toISOString()}).eq('id', qId);</p>
-<p class="p2"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><span class="Apple-converted-space">    </span>Qs[gIdx].video_path = path;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>Qs[gIdx].video_url<span class="Apple-converted-space">  </span>= publicUrl;</p>
-<p class="p3"><br></p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('upload-status').textContent='✅ Vidéo sauvegardée !';</p>
-<p class="p2"><span class="Apple-converted-space">    </span>showToast('Vidéo uploadée sur Supabase ✓');</p>
-<p class="p2"><span class="Apple-converted-space">    </span>renderGroomQ();</p>
-<p class="p3"><br></p>
-<p class="p2"><span class="Apple-converted-space">    </span>// Auto-advance to next unanswered</p>
-<p class="p2"><span class="Apple-converted-space">    </span>const nx=Qs.findIndex((q,i)=&gt;i&gt;gIdx&amp;&amp;!q.video_url);</p>
-<p class="p2"><span class="Apple-converted-space">    </span>if(nx!==-1)setTimeout(()=&gt;{gIdx=nx;renderGroomQ();},800);</p>
-<p class="p2"><span class="Apple-converted-space">  </span>} catch(e){</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('upload-status').textContent='❌ Erreur upload : ' + e.message;</p>
-<p class="p2"><span class="Apple-converted-space">    </span>showToast('Erreur : ' + e.message);</p>
-<p class="p2"><span class="Apple-converted-space">  </span>} finally {</p>
-<p class="p2"><span class="Apple-converted-space">    </span>btn.disabled=false;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2">}</p>
-<p class="p3"><br></p>
-<p class="p2">/* ── GAME ── */</p>
-<p class="p2">function loadGameQ(){</p>
-<p class="p2"><span class="Apple-converted-space">  </span>if(gameIdx&gt;=Qs.length){showEnd();return;}</p>
-<p class="p2"><span class="Apple-converted-space">  </span>const q=Qs[gameIdx]; answered=false;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('g-qtxt2').textContent=q.q;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('g-qi').textContent=`${gameIdx+1}/${Qs.length}`;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('g-prog').style.width=(gameIdx/Qs.length*100)+'%';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('gs-r').textContent=Qs.length-gameIdx;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>const vw=document.getElementById('g-vwrap'),vp=document.getElementById('g-vplayer');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>const nv=document.getElementById('g-novid'),po=document.getElementById('g-play-ov');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>if(q.video_url){</p>
-<p class="p2"><span class="Apple-converted-space">    </span>vp.src=q.video_url; vp.pause();</p>
-<p class="p2"><span class="Apple-converted-space">    </span>vw.classList.add('show'); po.style.display='flex';</p>
-<p class="p2"><span class="Apple-converted-space">    </span>nv.classList.remove('show');</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('g-btn-rev').style.display='flex';</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('g-btn-rev').textContent='▶ Lancer la vidéo du marié';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>} else {</p>
-<p class="p2"><span class="Apple-converted-space">    </span>vw.classList.remove('show');</p>
-<p class="p2"><span class="Apple-converted-space">    </span>nv.classList.add('show');</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('g-btn-rev').style.display='none';</p>
-<p class="p2"><span class="Apple-converted-space">    </span>document.getElementById('g-rbts').style.display='flex'; // no video: judge immediately</p>
-<p class="p2"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('g-rbts').style.display='none';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('g-btn-next').style.display='none';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>updScore();</p>
-<p class="p2">}</p>
-<p class="p2">function revealAns(){</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('g-btn-rev').style.display='none';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>playGVid();</p>
-<p class="p2"><span class="Apple-converted-space">  </span>// score buttons appear after video ends or after 1s fallback</p>
-<p class="p2"><span class="Apple-converted-space">  </span>const vp=document.getElementById('g-vplayer');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>vp.onended=()=&gt;document.getElementById('g-rbts').style.display='flex';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>setTimeout(()=&gt;document.getElementById('g-rbts').style.display='flex', 1200);</p>
-<p class="p2">}</p>
-<p class="p2">function playGVid(){</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('g-play-ov').style.display='none';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('g-vplayer').play();</p>
-<p class="p2">}</p>
-<p class="p2">function markR(ok){</p>
-<p class="p2"><span class="Apple-converted-space">  </span>if(answered)return; answered=true;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>if(ok){scores.c++;showToast('🎉 Bonne réponse !');}</p>
-<p class="p2"><span class="Apple-converted-space">  </span>else{scores.w++;showDrink();}</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('g-btn-next').style.display='flex';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('g-rbts').style.display='none';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>updScore();</p>
-<p class="p2">}</p>
-<p class="p2">function updScore(){</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('gs-c').textContent=scores.c;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('gs-w').textContent=scores.w;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('gs-r').textContent=Qs.length-gameIdx;</p>
-<p class="p2">}</p>
-<p class="p2">function nextQ(){gameIdx++;document.getElementById('g-vplayer').pause();loadGameQ();}</p>
-<p class="p2">function showDrink(){document.getElementById('drink-name').textContent=document.getElementById('bride-name').value||'La mariée';document.getElementById('drink-ov').classList.add('show');}</p>
-<p class="p2">function closeDrink(){document.getElementById('drink-ov').classList.remove('show');}</p>
-<p class="p2">async function showEnd(){</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('game-content').style.display='none';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('g-end').style.display='block';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('g-fc').textContent=scores.c;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('g-fw').textContent=scores.w;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>const pct=Math.round(scores.c/Qs.length*100);</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('g-eh').textContent=pct&gt;=70?'🏆 Elle le connaît bien !':'🥂 Soirée arrosée !';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>const bride=document.getElementById('bride-name').value||'La mariée';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>const groom=document.getElementById('groom-name').value||'le marié';</p>
-<p class="p2"><span class="Apple-converted-space">  </span>document.getElementById('g-es').textContent=`${bride} a trouvé ${scores.c}/${Qs.length} réponses de ${groom} !`;</p>
-<p class="p2"><span class="Apple-converted-space">  </span>// Save score</p>
-<p class="p2"><span class="Apple-converted-space">  </span>if(sessionId){</p>
-<p class="p2"><span class="Apple-converted-space">    </span>await sb.from('evjf_sessions').update({score_correct:scores.c, score_wrong:scores.w, played_at: new Date().toISOString()}).eq('id',sessionId);</p>
-<p class="p2"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2">}</p>
-<p class="p2">function restartG(){gameIdx=0;scores={c:0,w:0};answered=false;document.getElementById('g-end').style.display='none';document.getElementById('game-content').style.display='block';loadGameQ();}</p>
-<p class="p3"><br></p>
-<p class="p2">// Auto-fill code from URL on load</p>
-<p class="p2">window.addEventListener('DOMContentLoaded',()=&gt;{</p>
-<p class="p2"><span class="Apple-converted-space">  </span>const code=new URLSearchParams(location.search).get('code');</p>
-<p class="p2"><span class="Apple-converted-space">  </span>if(code){</p>
-<p class="p2"><span class="Apple-converted-space">    </span>const gi=document.getElementById('groom-code-input');</p>
-<p class="p2"><span class="Apple-converted-space">    </span>const gai=document.getElementById('game-code-input');</p>
-<p class="p2"><span class="Apple-converted-space">    </span>if(gi) gi.value=code.toUpperCase();</p>
-<p class="p2"><span class="Apple-converted-space">    </span>if(gai) gai.value=code.toUpperCase();</p>
-<p class="p2"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2">});</p>
-<p class="p2">&lt;/script&gt;</p>
-<p class="p2">&lt;/body&gt;</p>
-<p class="p2">&lt;/html&gt;</p>
+
+<!-- ═══ LANDING ═══ -->
+<div class="screen active" id="screen-landing">
+  <div class="land-logo-txt">WEVOW</div>
+  <div class="land-w"><svg viewBox="0 0 24 24"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402C1 4.018 3.225 2 6.002 2 8.23 2 9.959 3.472 12 5.907 14.041 3.472 15.77 2 18 2c2.777 0 5 2.018 5 5.191 0 4.105-5.37 8.863-11 14.402z"/></svg></div>
+  <h1 class="land-title">Il a<br>dit <em>quoi ?</em></h1>
+  <p class="land-sub">Est-ce que Manon connaît vraiment Hugo ? Il répond en vidéo… elle boit si elle se trompe ! 🥂</p>
+  <div class="land-btns">
+    <button class="lbtn lbtn-p" onclick="goTo('screen-setup')">
+      <div class="lbtn-icon">📝</div>
+      <div><div class="lbtn-label">Organiser le quiz</div><div class="lbtn-desc">Créer les questions • Obtenir le code</div></div>
+    </button>
+    <button class="lbtn lbtn-s" onclick="goTo('screen-groom-join')">
+      <div class="lbtn-icon">🤵</div>
+      <div><div class="lbtn-label">Je suis le marié</div><div class="lbtn-desc">Entrer mon code • Filmer mes réponses</div></div>
+    </button>
+    <button class="lbtn lbtn-s" onclick="goTo('screen-game-join')">
+      <div class="lbtn-icon">🥂</div>
+      <div><div class="lbtn-label">Lancer le jeu !</div><div class="lbtn-desc">Mode EVJF — le jour J</div></div>
+    </button>
+  </div>
+</div>
+
+<!-- ═══ SETUP ═══ -->
+<div class="screen" id="screen-setup">
+  <div class="app-header">
+    <div class="ah-logo">
+      <div class="ah-icon"><svg viewBox="0 0 24 24"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402C1 4.018 3.225 2 6.002 2 8.23 2 9.959 3.472 12 5.907 14.041 3.472 15.77 2 18 2c2.777 0 5 2.018 5 5.191 0 4.105-5.37 8.863-11 14.402z"/></svg></div>
+      <span class="ah-name">WEVOW</span>
+    </div>
+    <button class="back-btn" onclick="goTo('screen-landing')">← Retour</button>
+  </div>
+  <div class="screen-body">
+    <div class="stabs">
+      <button class="stab active" onclick="stab('q')">📝 Questions</button>
+      <button class="stab" onclick="stab('n')">👤 Prénoms</button>
+      <button class="stab" onclick="stab('s')">🔗 Partager</button>
+    </div>
+
+    <!-- QUESTIONS -->
+    <div class="sp active" id="sp-q">
+      <div class="card">
+        <h3>Nouvelle question</h3>
+        <p>Le marié répondra en vidéo à chacune</p>
+        <div class="field"><label>Ta question</label><textarea id="new-q" rows="2" placeholder="ex : Quel est le plat préféré de ta future femme ?"></textarea></div>
+        <button class="btn btn-p" onclick="addQ()">+ Ajouter</button>
+        <button class="btn btn-g" onclick="loadDef()" style="margin-top:8px">✨ Charger 10 questions types</button>
+      </div>
+      <div class="card">
+        <h3>Questions (<span id="qcount">0</span>) <span id="vcbadge" style="color:var(--rose);font-size:12px"></span></h3>
+        <div id="qlist" class="ql"><div class="empty"><div class="ei">💭</div><p>Aucune question encore.</p></div></div>
+      </div>
+      <button class="btn btn-f" onclick="saveSession()" id="btn-save-session">☁️ Sauvegarder sur Supabase</button>
+      <div class="loader" id="save-loader"><div class="spinner"></div><p>Sauvegarde en cours…</p></div>
+    </div>
+
+    <!-- NOMS -->
+    <div class="sp" id="sp-n">
+      <div class="card">
+        <h3>Les mariés 💑</h3>
+        <p>Pour personnaliser le jeu</p>
+        <div class="field"><label>Prénom de la mariée</label><input type="text" id="bride-name" value="Manon"></div>
+        <div class="field"><label>Prénom du marié</label><input type="text" id="groom-name" value="Hugo"></div>
+        <button class="btn btn-p" onclick="stab('q');showToast('Sauvegardé ✓')">OK</button>
+      </div>
+    </div>
+
+    <!-- PARTAGER -->
+    <div class="sp" id="sp-s">
+      <div id="share-no-session" class="card" style="text-align:center">
+        <div class="empty"><div class="ei">☁️</div><p>Sauvegarde d'abord tes questions<br>pour obtenir un code de partage.</p></div>
+        <button class="btn btn-p" onclick="stab('q')" style="margin-top:8px">← Questions</button>
+      </div>
+      <div id="share-code-box" style="display:none">
+        <div class="code-box">
+          <p>Code à envoyer au marié 📲</p>
+          <div class="code-val" id="session-code-disp">——</div>
+          <div class="code-hint">Il entre ce code dans "Je suis le marié"</div>
+        </div>
+        <div class="card" style="text-align:center">
+          <p style="margin-bottom:12px;font-size:12px;color:#8A9E9B">Partage ce lien directement 👇</p>
+          <div id="share-url" style="font-size:11px;color:var(--rose);word-break:break-all;margin-bottom:14px;font-family:monospace;background:var(--cream);padding:10px;border-radius:8px;"></div>
+          <button class="btn btn-p" onclick="copyLink()">📋 Copier le lien</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ GROOM JOIN ═══ -->
+<div class="screen" id="screen-groom-join">
+  <div class="app-header">
+    <div class="ah-logo">
+      <div class="ah-icon"><svg viewBox="0 0 24 24"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402C1 4.018 3.225 2 6.002 2 8.23 2 9.959 3.472 12 5.907 14.041 3.472 15.77 2 18 2c2.777 0 5 2.018 5 5.191 0 4.105-5.37 8.863-11 14.402z"/></svg></div>
+      <span class="ah-name">WEVOW</span>
+    </div>
+    <button class="back-btn" onclick="goTo('screen-landing')">← Retour</button>
+  </div>
+  <div class="screen-body">
+    <div class="join-box">
+      <h3>Bonjour le marié 🤵</h3>
+      <p>Entre le code que l'organisatrice t'a envoyé</p>
+      <div class="field"><label>Code de session</label><input type="text" id="groom-code-input" class="code-input" maxlength="6" placeholder="ABC123" oninput="this.value=this.value.toUpperCase()"></div>
+      <button class="btn btn-p" onclick="groomJoin()">Rejoindre →</button>
+    </div>
+    <div class="loader" id="groom-join-loader"><div class="spinner"></div><p>Chargement…</p></div>
+  </div>
+</div>
+
+<!-- ═══ GROOM RECORD ═══ -->
+<div class="screen" id="screen-groom">
+  <div class="app-header">
+    <div class="ah-logo">
+      <div class="ah-icon"><svg viewBox="0 0 24 24"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402C1 4.018 3.225 2 6.002 2 8.23 2 9.959 3.472 12 5.907 14.041 3.472 15.77 2 18 2c2.777 0 5 2.018 5 5.191 0 4.105-5.37 8.863-11 14.402z"/></svg></div>
+      <span class="ah-name">WEVOW</span>
+    </div>
+    <button class="back-btn" onclick="groomLeave()">← Retour</button>
+  </div>
+  <div class="screen-body">
+    <div class="gcard">
+      <h3>Bonjour <span id="gname-disp">Hugo</span> 🤵</h3>
+      <p>Réponds à chaque question en vidéo !</p>
+      <div class="ring-wrap">
+        <svg class="ring-svg" width="72" height="72" viewBox="0 0 72 72">
+          <defs><linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#D4A98A"/><stop offset="100%" style="stop-color:#C9956A"/></linearGradient></defs>
+          <circle class="ring-bg" cx="36" cy="36" r="30"/>
+          <circle class="ring-fill" id="ring-fill" cx="36" cy="36" r="30" stroke-dasharray="188.5" stroke-dashoffset="188.5"/>
+        </svg>
+        <div class="ring-count" id="ring-count">0/0</div>
+      </div>
+      <div style="color:#7EA09A;font-size:10px;letter-spacing:2px">VIDÉOS ENREGISTRÉES</div>
+    </div>
+
+    <div class="qnav">
+      <button class="qnav-btn" id="g-prev" onclick="gNav(-1)">‹</button>
+      <div class="qnav-info"><div class="qnav-count" id="g-nav-c">1/1</div><div class="qnav-lbl">Question</div></div>
+      <button class="qnav-btn" id="g-next" onclick="gNav(1)">›</button>
+    </div>
+    <div class="pdots" id="g-dots"></div>
+
+    <div class="rec-qcard">
+      <div class="rec-qlbl">✦ Ta question ✦</div>
+      <div class="rec-qtxt" id="g-qtxt">…</div>
+    </div>
+
+    <div class="vid-wrap" id="preview-wrap">
+      <video id="cam-preview" autoplay muted playsinline></video>
+      <div class="rec-ind" id="rec-ind"><div class="rec-dot"></div>REC</div>
+      <div class="rec-timer" id="rec-timer">0:00</div>
+    </div>
+    <div class="play-wrap" id="play-wrap"><video id="play-vid" controls playsinline></video></div>
+
+    <div class="rec-ctrls">
+      <div class="rec-row" id="row1">
+        <button class="btn-rec" id="btn-start" onclick="startRec()">⏺ Enregistrer</button>
+        <button class="btn-stop" id="btn-stop" onclick="stopRec()" style="display:none">⏹ Stopper</button>
+      </div>
+      <div id="row2" style="display:none;flex-direction:column;gap:8px">
+        <button class="btn btn-p" id="btn-upload" onclick="saveAndUpload()">☁️ Sauvegarder sur Supabase</button>
+        <button class="btn btn-g" onclick="retakeVid()">🔄 Recommencer</button>
+      </div>
+      <div class="upload-bar-wrap" id="upload-bar-wrap"><div class="upload-bar" id="upload-bar"></div></div>
+      <div class="upload-status" id="upload-status"></div>
+      <div class="cam-status" id="cam-status"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ GAME JOIN ═══ -->
+<div class="screen" id="screen-game-join">
+  <div class="app-header">
+    <div class="ah-logo">
+      <div class="ah-icon"><svg viewBox="0 0 24 24"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402C1 4.018 3.225 2 6.002 2 8.23 2 9.959 3.472 12 5.907 14.041 3.472 15.77 2 18 2c2.777 0 5 2.018 5 5.191 0 4.105-5.37 8.863-11 14.402z"/></svg></div>
+      <span class="ah-name">WEVOW</span>
+    </div>
+    <button class="back-btn" onclick="goTo('screen-landing')">← Retour</button>
+  </div>
+  <div class="screen-body">
+    <div class="join-box">
+      <h3>Lancer le jeu 🥂</h3>
+      <p>Entre le code de la session pour charger les questions et vidéos</p>
+      <div class="field"><label>Code de session</label><input type="text" id="game-code-input" class="code-input" maxlength="6" placeholder="ABC123" oninput="this.value=this.value.toUpperCase()"></div>
+      <button class="btn btn-p" onclick="gameJoin()">C'est parti ! →</button>
+    </div>
+    <div class="loader" id="game-join-loader"><div class="spinner"></div><p>Chargement…</p></div>
+  </div>
+</div>
+
+<!-- ═══ GAME ═══ -->
+<div class="screen" id="screen-game">
+  <div class="app-header">
+    <div class="ah-logo">
+      <div class="ah-icon"><svg viewBox="0 0 24 24"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402C1 4.018 3.225 2 6.002 2 8.23 2 9.959 3.472 12 5.907 14.041 3.472 15.77 2 18 2c2.777 0 5 2.018 5 5.191 0 4.105-5.37 8.863-11 14.402z"/></svg></div>
+      <span class="ah-name">WEVOW</span>
+    </div>
+    <button class="back-btn" onclick="goTo('screen-landing')">Quitter</button>
+  </div>
+  <div class="screen-body">
+    <div class="gscore">
+      <div class="gsitem"><div class="gsval g" id="gs-c">0</div><div class="gslbl">✓ Bonnes</div></div>
+      <div class="gsitem"><div class="gsval b" id="gs-w">0</div><div class="gslbl">🥂 Verres</div></div>
+      <div class="gsitem"><div class="gsval r" id="gs-r">0</div><div class="gslbl">Restantes</div></div>
+    </div>
+
+    <div id="game-content">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+        <span style="font-size:9px;letter-spacing:2px;color:var(--rose);text-transform:uppercase">Question</span>
+        <span style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--forest)" id="g-qi">1/1</span>
+      </div>
+      <div class="prog-wrap"><div class="prog-bar" id="g-prog" style="width:0%"></div></div>
+      <div class="qcard"><div class="qcard-lbl">✦ Il a dit… ✦</div><div class="qcard-txt" id="g-qtxt2">…</div></div>
+      <div class="gvid-wrap" id="g-vwrap">
+        <video id="g-vplayer" playsinline></video>
+        <div class="play-ov" id="g-play-ov" onclick="playGVid()"><div class="play-circle">▶</div></div>
+      </div>
+      <div class="novid" id="g-novid">⚠️ Pas de vidéo pour cette question — le marié n'a pas encore filmé.</div>
+      <div class="gactions" id="g-actions">
+        <button class="btn btn-p" id="g-btn-rev" onclick="revealAns()">▶ Lancer la vidéo du marié</button>
+        <div class="rbts" id="g-rbts" style="display:none">
+          <button class="btn-ok" onclick="markR(true)">✓ Bonne !</button>
+          <button class="btn-ko" onclick="markR(false)">🥂 Elle boit !</button>
+        </div>
+        <button class="btn btn-f" id="g-btn-next" onclick="nextQ()" style="display:none">Question suivante →</button>
+      </div>
+    </div>
+
+    <div class="endwrap" id="g-end" style="display:none">
+      <div class="end-t">🏆</div>
+      <h2 class="end-h" id="g-eh">Bravo !</h2>
+      <p class="end-s" id="g-es"></p>
+      <div class="end-sc">
+        <div class="esi"><div class="esv g" id="g-fc">0</div><div class="esl">Bonnes</div></div>
+        <div class="esi"><div class="esv b" id="g-fw">0</div><div class="esl">Verres</div></div>
+      </div>
+      <button class="btn btn-p" onclick="restartG()" style="max-width:260px;margin:0 auto 8px">🔁 Rejouer</button>
+      <button class="btn btn-g" onclick="goTo('screen-landing')" style="max-width:260px;margin:0 auto">← Accueil</button>
+    </div>
+  </div>
+</div>
+
+<!-- DRINK OVERLAY -->
+<div class="ov" id="drink-ov" onclick="closeDrink()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-ic">🥂</div>
+    <div class="modal-h" id="drink-name">Manon</div>
+    <div class="modal-s">N'a pas la bonne réponse…<br><strong>Elle boit un verre !</strong></div>
+    <button class="btn btn-p" onclick="closeDrink()">Tchin tchin ! 🥂</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ══════════════════════════════════════════
+   ⚠️  REMPLIS CES DEUX VALEURS
+   Supabase Dashboard → Settings → API
+══════════════════════════════════════════ */
+const SUPABASE_URL  = 'https://kezdvjiomkppbevwidzi.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtlemR2amlvbWtwcGJldndpZHppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NzY1NjAsImV4cCI6MjA5MzA1MjU2MH0._JaNQWHSpop3apBls6bROE4sdfXQUmePg3qlb9TbwoE';
+const BUCKET        = 'quiz-videos';
+/* ══════════════════════════════════════════ */
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+/* ── STATE ── */
+let Qs = [];           // local questions array
+let sessionId   = null;
+let sessionCode = null;
+let groomSessionId = null;
+let gIdx = 0, gameIdx = 0;
+let scores = {c:0,w:0};
+let answered = false;
+let camStream = null, mr = null, chunks = [], timerIv = null, recSec = 0, pendBlob = null;
+
+const DEF = [
+  // 🌸 Classiques
+  {q:"Comment vous êtes-vous rencontrés la première fois ?"},
+  {q:"Où était votre premier rendez-vous ?"},
+  {q:"Quel est le plat préféré de Manon ?"},
+  {q:"Quel est le voyage de rêve de Manon ?"},
+  {q:"Quel est le film ou la série que Manon pourrait regarder en boucle ?"},
+  {q:"Si Manon était un personnage de série, ce serait qui ?"},
+  {q:"Quelle est la chose dont Manon est la plus fière ?"},
+  // 🌶 Un peu plus fun
+  {q:"Quel est le plus grand défaut de Manon selon toi ?"},
+  {q:"Qu'est-ce que Manon fait qui t'énerve (un tout petit peu) ?"},
+  {q:"Que fait Manon quand elle est stressée ?"},
+  {q:"Quelle est la pire décision que vous ayez prise ensemble ?"},
+  {q:"Qui dit \"je t'aime\" en premier dans le couple ?"},
+  {q:"Qui est le plus jaloux des deux ?"},
+  {q:"Quelle est la chose la plus folle que Manon t'ait demandé de faire ?"},
+  // 🔥 Spicy (mais raisonnables)
+  {q:"Qui est le plus dominant dans le couple ?"},
+  {q:"Quel est le surnom le plus embarrassant que tu as pour Manon ?"},
+  {q:"Si Manon pouvait changer une chose chez toi, ce serait quoi ?"},
+  {q:"Quelle est la chose que Manon fait en cachette en pensant que tu ne le sais pas ?"},
+  {q:"Décris votre première nuit ensemble en trois mots… sans que ses parents rougissent trop 😏"},
+];
+
+/* ── UTILS ── */
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  // auto-fill code from URL ?code=XXXX
+  const urlCode = new URLSearchParams(location.search).get('code');
+  if(urlCode){
+    const gi = document.getElementById('groom-code-input');
+    const gai = document.getElementById('game-code-input');
+    if(gi) gi.value = urlCode.toUpperCase();
+    if(gai) gai.value = urlCode.toUpperCase();
+  }
+}
+function showToast(m,dur=2400){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
+function showLoader(id,v){document.getElementById(id).classList.toggle('show',v);}
+function genCode(){return Math.random().toString(36).substring(2,8).toUpperCase();}
+
+/* ── SETUP ── */
+function stab(n){
+  document.querySelectorAll('.stab').forEach((t,i)=>t.classList.toggle('active',(i===0&&n==='q')||(i===1&&n==='n')||(i===2&&n==='s')));
+  ['sp-q','sp-n','sp-s'].forEach((id,i)=>document.getElementById(id).classList.toggle('active',['q','n','s'][i]===n));
+  if(n==='s') renderShareTab();
+}
+function renderShareTab(){
+  document.getElementById('share-no-session').style.display = sessionCode ? 'none':'block';
+  document.getElementById('share-code-box').style.display   = sessionCode ? 'block':'none';
+  if(sessionCode){
+    document.getElementById('session-code-disp').textContent = sessionCode;
+    const url = `${location.origin}${location.pathname}?code=${sessionCode}`;
+    document.getElementById('share-url').textContent = url;
+  }
+}
+function copyLink(){
+  const url = `${location.origin}${location.pathname}?code=${sessionCode}`;
+  navigator.clipboard.writeText(url).then(()=>showToast('Lien copié ✓'));
+}
+
+function addQ(){
+  const q=document.getElementById('new-q').value.trim();
+  if(!q){showToast('Écris une question !');return;}
+  Qs.push({q,video_path:null,video_url:null});
+  document.getElementById('new-q').value='';
+  renderQL(); showToast('Question ajoutée ✓');
+}
+function delQ(i){Qs.splice(i,1);renderQL();}
+function loadDef(){Qs=DEF.map(d=>({...d,video_path:null,video_url:null}));renderQL();showToast('10 questions chargées ✓');}
+function renderQL(){
+  const vc=Qs.filter(q=>q.video_url).length;
+  document.getElementById('qcount').textContent=Qs.length;
+  document.getElementById('vcbadge').textContent=vc?`• 🎬 ${vc} vidéo${vc>1?'s':''}`:'';;
+  const el=document.getElementById('qlist');
+  if(!Qs.length){el.innerHTML='<div class="empty"><div class="ei">💭</div><p>Aucune question encore.</p></div>';return;}
+  el.innerHTML=Qs.map((q,i)=>`
+    <div class="qi ${q.video_url?'hv':''}">
+      <div class="qnum">${i+1}</div>
+      <div class="qbody">
+        <div class="qtxt">${q.q}</div>
+        <div class="qmeta">
+          ${q.video_url?'<span class="q-vid-b">🎬 Vidéo enregistrée</span>':'<span style="font-size:10px;color:#B8C9C7">En attente de vidéo</span>'}
+        </div>
+      </div>
+      <button class="q-del" onclick="delQ(${i})">×</button>
+    </div>`).join('');
+}
+
+/* ── SUPABASE: SAVE SESSION ── */
+async function saveSession(){
+  if(!Qs.length){showToast('Ajoute au moins une question !');return;}
+  const btn = document.getElementById('btn-save-session');
+  btn.disabled = true; showLoader('save-loader',true);
+  try {
+    const code = sessionCode || genCode();
+    const bride = document.getElementById('bride-name').value || 'La mariée';
+    const groom = document.getElementById('groom-name').value || 'Le marié';
+
+    // Upsert session
+    const {data: sess, error: sessErr} = await sb
+      .from('evjf_sessions')
+      .upsert({
+        ...(sessionId ? {id: sessionId} : {}),
+        bride_name: bride, groom_name: groom, session_code: code
+      }, {onConflict: 'session_code'})
+      .select().single();
+    if(sessErr) throw sessErr;
+
+    sessionId   = sess.id;
+    sessionCode = sess.session_code;
+
+    // Delete old questions and re-insert
+    await sb.from('evjf_questions').delete().eq('session_id', sessionId);
+    const rows = Qs.map((q,i)=>({
+      session_id: sessionId, position: i,
+      question_text: q.q,
+      video_path: q.video_path || null,
+      video_url:  q.video_url  || null,
+    }));
+    const {error: qErr} = await sb.from('evjf_questions').insert(rows);
+    if(qErr) throw qErr;
+
+    showToast('✅ Sauvegardé sur Supabase !');
+    stab('s');
+  } catch(e){
+    console.error(e);
+    showToast('❌ Erreur : ' + (e.message||'Vérifiez vos clés Supabase'));
+  } finally {
+    btn.disabled=false; showLoader('save-loader',false);
+  }
+}
+
+/* ── SUPABASE: LOAD SESSION ── */
+async function loadSession(code){
+  const {data: sess, error} = await sb
+    .from('evjf_sessions').select('*').eq('session_code', code).single();
+  if(error || !sess) throw new Error('Session introuvable pour ce code');
+
+  const {data: qs, error: qErr} = await sb
+    .from('evjf_questions').select('*')
+    .eq('session_id', sess.id).order('position');
+  if(qErr) throw qErr;
+
+  return {sess, qs};
+}
+
+/* ── GROOM JOIN ── */
+async function groomJoin(){
+  const code = document.getElementById('groom-code-input').value.trim().toUpperCase();
+  if(code.length < 4){showToast('Entre un code valide');return;}
+  showLoader('groom-join-loader',true);
+  try {
+    const {sess, qs} = await loadSession(code);
+    groomSessionId = sess.id;
+    Qs = qs.map(q=>({q:q.question_text, id:q.id, video_path:q.video_path, video_url:q.video_url}));
+    document.getElementById('gname-disp').textContent = sess.groom_name;
+    gIdx=0; goTo('screen-groom'); renderGroomQ(); startCam();
+  } catch(e){
+    showToast('❌ ' + e.message);
+  } finally {
+    showLoader('groom-join-loader',false);
+  }
+}
+
+/* ── GAME JOIN ── */
+async function gameJoin(){
+  const code = document.getElementById('game-code-input').value.trim().toUpperCase();
+  if(code.length < 4){showToast('Entre un code valide');return;}
+  showLoader('game-join-loader',true);
+  try {
+    const {sess, qs} = await loadSession(code);
+    sessionId = sess.id;
+    document.getElementById('bride-name').value = sess.bride_name;
+    document.getElementById('groom-name').value = sess.groom_name;
+    Qs = qs.map(q=>({q:q.question_text, id:q.id, video_path:q.video_path, video_url:q.video_url}));
+    gameIdx=0; scores={c:0,w:0}; answered=false;
+    document.getElementById('g-end').style.display='none';
+    document.getElementById('game-content').style.display='block';
+    goTo('screen-game'); loadGameQ();
+  } catch(e){
+    showToast('❌ ' + e.message);
+  } finally {
+    showLoader('game-join-loader',false);
+  }
+}
+
+/* ── GROOM RECORDER ── */
+function renderGroomQ(){
+  const q=Qs[gIdx];
+  document.getElementById('g-qtxt').textContent=q.q;
+  document.getElementById('g-nav-c').textContent=`${gIdx+1}/${Qs.length}`;
+  const done=Qs.filter(x=>x.video_url).length;
+  const circ=188.5;
+  document.getElementById('ring-fill').style.strokeDashoffset=circ-(done/Qs.length)*circ;
+  document.getElementById('ring-count').textContent=`${done}/${Qs.length}`;
+  document.getElementById('g-dots').innerHTML=Qs.map((_,i)=>`<div class="pdot ${i<gIdx?'done':i===gIdx?'cur':''}"></div>`).join('');
+  document.getElementById('g-prev').disabled=gIdx===0;
+  document.getElementById('g-next').disabled=gIdx===Qs.length-1;
+  pendBlob=null;
+  document.getElementById('play-wrap').classList.remove('show');
+  document.getElementById('row2').style.display='none';
+  document.getElementById('row1').style.display='flex';
+  document.getElementById('btn-start').style.display='block';
+  document.getElementById('btn-stop').style.display='none';
+  document.getElementById('rec-ind').classList.remove('show');
+  document.getElementById('rec-timer').classList.remove('show');
+  document.getElementById('preview-wrap').style.display='block';
+  document.getElementById('upload-bar-wrap').classList.remove('show');
+  document.getElementById('upload-status').classList.remove('show');
+  if(q.video_url){
+    document.getElementById('play-vid').src=q.video_url;
+    document.getElementById('play-wrap').classList.add('show');
+    document.getElementById('preview-wrap').style.display='none';
+    document.getElementById('cam-status').textContent='✅ Vidéo déjà enregistrée';
+  } else {
+    document.getElementById('cam-status').textContent='';
+  }
+}
+function gNav(d){gIdx=Math.max(0,Math.min(Qs.length-1,gIdx+d));renderGroomQ();}
+
+async function startCam(){
+  const st=document.getElementById('cam-status');
+  try {
+    camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:true});
+    document.getElementById('cam-preview').srcObject=camStream;
+    st.textContent='📷 Caméra prête'; setTimeout(()=>{if(st.textContent==='📷 Caméra prête')st.textContent='';},2000);
+  } catch(e){ st.textContent='⚠️ Accès caméra refusé'; }
+}
+function groomLeave(){
+  if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}
+  goTo('screen-landing');
+}
+
+function startRec(){
+  if(!camStream){showToast('Caméra non disponible');return;}
+  chunks=[];pendBlob=null;
+  const mt=MediaRecorder.isTypeSupported('video/webm;codecs=vp9')?'video/webm;codecs=vp9':
+           MediaRecorder.isTypeSupported('video/webm')?'video/webm':'video/mp4';
+  mr=new MediaRecorder(camStream,{mimeType:mt});
+  mr.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data);};
+  mr.onstop=()=>{
+    pendBlob=new Blob(chunks,{type:mt});
+    document.getElementById('play-vid').src=URL.createObjectURL(pendBlob);
+    document.getElementById('play-wrap').classList.add('show');
+    document.getElementById('preview-wrap').style.display='none';
+    document.getElementById('row1').style.display='none';
+    document.getElementById('row2').style.display='flex';
+    document.getElementById('row2').style.flexDirection='column';
+    document.getElementById('cam-status').textContent='👆 Vérifiez puis sauvegardez sur Supabase';
+  };
+  mr.start(100);
+  document.getElementById('btn-start').style.display='none';
+  document.getElementById('btn-stop').style.display='block';
+  document.getElementById('rec-ind').classList.add('show');
+  document.getElementById('rec-timer').classList.add('show');
+  recSec=0;
+  timerIv=setInterval(()=>{recSec++;const m=Math.floor(recSec/60),s=recSec%60;document.getElementById('rec-timer').textContent=`${m}:${s.toString().padStart(2,'0')}`;},1000);
+}
+function stopRec(){
+  if(mr&&mr.state!=='inactive')mr.stop();
+  clearInterval(timerIv);
+  document.getElementById('rec-ind').classList.remove('show');
+  document.getElementById('rec-timer').classList.remove('show');
+  document.getElementById('btn-stop').style.display='none';
+}
+function retakeVid(){
+  pendBlob=null;
+  document.getElementById('play-wrap').classList.remove('show');
+  document.getElementById('preview-wrap').style.display='block';
+  document.getElementById('row1').style.display='flex';
+  document.getElementById('row2').style.display='none';
+  document.getElementById('btn-start').style.display='block';
+  document.getElementById('btn-stop').style.display='none';
+  document.getElementById('cam-status').textContent='';
+  document.getElementById('upload-bar-wrap').classList.remove('show');
+  document.getElementById('upload-status').classList.remove('show');
+}
+
+async function saveAndUpload(){
+  if(!pendBlob){showToast('Enregistre d\'abord une vidéo');return;}
+  const btn=document.getElementById('btn-upload');
+  btn.disabled=true;
+  document.getElementById('upload-bar-wrap').classList.add('show');
+  document.getElementById('upload-status').classList.add('show');
+  document.getElementById('upload-status').textContent='⬆️ Upload en cours…';
+
+  try {
+    const ext = pendBlob.type.includes('mp4') ? 'mp4' : 'webm';
+    const path = `${groomSessionId}/q_${gIdx}.${ext}`;
+
+    // Fake progress while uploading
+    let prog=0;
+    const fakeIv=setInterval(()=>{prog=Math.min(prog+5,90);document.getElementById('upload-bar').style.width=prog+'%';},200);
+
+    const {error:upErr} = await sb.storage.from(BUCKET).upload(path, pendBlob, {upsert:true, contentType:pendBlob.type});
+    clearInterval(fakeIv);
+    if(upErr) throw upErr;
+
+    document.getElementById('upload-bar').style.width='100%';
+
+    const {data:urlData} = sb.storage.from(BUCKET).getPublicUrl(path);
+    const publicUrl = urlData.publicUrl;
+
+    // Update DB
+    const qId = Qs[gIdx].id;
+    if(qId){
+      await sb.from('evjf_questions').update({video_path:path, video_url:publicUrl, recorded_at: new Date().toISOString()}).eq('id', qId);
+    }
+    Qs[gIdx].video_path = path;
+    Qs[gIdx].video_url  = publicUrl;
+
+    document.getElementById('upload-status').textContent='✅ Vidéo sauvegardée !';
+    showToast('Vidéo uploadée sur Supabase ✓');
+    renderGroomQ();
+
+    // Auto-advance to next unanswered
+    const nx=Qs.findIndex((q,i)=>i>gIdx&&!q.video_url);
+    if(nx!==-1)setTimeout(()=>{gIdx=nx;renderGroomQ();},800);
+  } catch(e){
+    document.getElementById('upload-status').textContent='❌ Erreur upload : ' + e.message;
+    showToast('Erreur : ' + e.message);
+  } finally {
+    btn.disabled=false;
+  }
+}
+
+/* ── GAME ── */
+function loadGameQ(){
+  if(gameIdx>=Qs.length){showEnd();return;}
+  const q=Qs[gameIdx]; answered=false;
+  document.getElementById('g-qtxt2').textContent=q.q;
+  document.getElementById('g-qi').textContent=`${gameIdx+1}/${Qs.length}`;
+  document.getElementById('g-prog').style.width=(gameIdx/Qs.length*100)+'%';
+  document.getElementById('gs-r').textContent=Qs.length-gameIdx;
+  const vw=document.getElementById('g-vwrap'),vp=document.getElementById('g-vplayer');
+  const nv=document.getElementById('g-novid'),po=document.getElementById('g-play-ov');
+  if(q.video_url){
+    vp.src=q.video_url; vp.pause();
+    vw.classList.add('show'); po.style.display='flex';
+    nv.classList.remove('show');
+    document.getElementById('g-btn-rev').style.display='flex';
+    document.getElementById('g-btn-rev').textContent='▶ Lancer la vidéo du marié';
+  } else {
+    vw.classList.remove('show');
+    nv.classList.add('show');
+    document.getElementById('g-btn-rev').style.display='none';
+    document.getElementById('g-rbts').style.display='flex'; // no video: judge immediately
+  }
+  document.getElementById('g-rbts').style.display='none';
+  document.getElementById('g-btn-next').style.display='none';
+  updScore();
+}
+function revealAns(){
+  document.getElementById('g-btn-rev').style.display='none';
+  playGVid();
+  // score buttons appear after video ends or after 1s fallback
+  const vp=document.getElementById('g-vplayer');
+  vp.onended=()=>document.getElementById('g-rbts').style.display='flex';
+  setTimeout(()=>document.getElementById('g-rbts').style.display='flex', 1200);
+}
+function playGVid(){
+  document.getElementById('g-play-ov').style.display='none';
+  document.getElementById('g-vplayer').play();
+}
+function markR(ok){
+  if(answered)return; answered=true;
+  if(ok){scores.c++;showToast('🎉 Bonne réponse !');}
+  else{scores.w++;showDrink();}
+  document.getElementById('g-btn-next').style.display='flex';
+  document.getElementById('g-rbts').style.display='none';
+  updScore();
+}
+function updScore(){
+  document.getElementById('gs-c').textContent=scores.c;
+  document.getElementById('gs-w').textContent=scores.w;
+  document.getElementById('gs-r').textContent=Qs.length-gameIdx;
+}
+function nextQ(){gameIdx++;document.getElementById('g-vplayer').pause();loadGameQ();}
+function showDrink(){document.getElementById('drink-name').textContent=document.getElementById('bride-name').value||'La mariée';document.getElementById('drink-ov').classList.add('show');}
+function closeDrink(){document.getElementById('drink-ov').classList.remove('show');}
+async function showEnd(){
+  document.getElementById('game-content').style.display='none';
+  document.getElementById('g-end').style.display='block';
+  document.getElementById('g-fc').textContent=scores.c;
+  document.getElementById('g-fw').textContent=scores.w;
+  const pct=Math.round(scores.c/Qs.length*100);
+  document.getElementById('g-eh').textContent=pct>=70?'🏆 Elle le connaît bien !':'🥂 Soirée arrosée !';
+  const bride=document.getElementById('bride-name').value||'La mariée';
+  const groom=document.getElementById('groom-name').value||'le marié';
+  document.getElementById('g-es').textContent=`${bride} a trouvé ${scores.c}/${Qs.length} réponses de ${groom} !`;
+  // Save score
+  if(sessionId){
+    await sb.from('evjf_sessions').update({score_correct:scores.c, score_wrong:scores.w, played_at: new Date().toISOString()}).eq('id',sessionId);
+  }
+}
+function restartG(){gameIdx=0;scores={c:0,w:0};answered=false;document.getElementById('g-end').style.display='none';document.getElementById('game-content').style.display='block';loadGameQ();}
+
+// Auto-fill code from URL on load
+window.addEventListener('DOMContentLoaded',()=>{
+  const code=new URLSearchParams(location.search).get('code');
+  if(code){
+    const gi=document.getElementById('groom-code-input');
+    const gai=document.getElementById('game-code-input');
+    if(gi) gi.value=code.toUpperCase();
+    if(gai) gai.value=code.toUpperCase();
+  }
+});
+</script>
 </body>
 </html>
