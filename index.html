@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>WEVOW — Il a dit quoi ? 💍</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 :root {
   --cream:#F8F3EE; --forest:#1E3A35; --rose:#C9956A;
@@ -472,7 +472,12 @@ const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
 const BUCKET        = 'quiz-videos';
 /* ══════════════════════════════════════════ */
 
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+let sb;
+try {
+  sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+} catch(e) {
+  console.error('Supabase init failed:', e);
+}
 
 /* ── STATE ── */
 let Qs = [];           // local questions array
